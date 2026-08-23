@@ -829,7 +829,7 @@
             });
         }
 
-        function saveAtleta() {
+        async function saveAtleta() {
             const editId = document.getElementById('atleta-id-hidden').value;
             const cedula = parseInt(document.getElementById('atleta-cedula').value);
             const nombre = document.getElementById('atleta-nombre').value.trim();
@@ -854,10 +854,26 @@
                 dbAtletas.push(record);
             }
 
-            localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
-            resetAtletaForm();
-            renderAtletas();
-            updatePagoAtletasSelector();
+           localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
+
+try {
+    await window.firebaseAddDoc(
+        window.firebaseCollection(window.firebaseDB, "atletas"),
+        record
+    );
+
+    console.log("✅ Atleta guardado en Firebase");
+    alert("Atleta guardado correctamente en Firebase");
+
+} catch (error) {
+    console.error("❌ Error al guardar en Firebase:", error);
+    alert("El atleta se guardó en la página, pero NO en Firebase. Revisa la consola.");
+    return;
+}
+
+resetAtletaForm();
+renderAtletas();
+updatePagoAtletasSelector();
         }
 
         function resetAtletaForm() {
