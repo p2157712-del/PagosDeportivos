@@ -863,7 +863,6 @@ try {
     );
 
     console.log("✅ Atleta guardado en Firebase");
-    alert("Atleta guardado correctamente en Firebase");
 
 } catch (error) {
     console.error("❌ Error al guardar en Firebase:", error);
@@ -963,7 +962,7 @@ updatePagoAtletasSelector();
             });
         }
 
-        function savePago() {
+        async function savePago() {
             const editId = document.getElementById('pago-id-hidden').value;
             const monto = parseFloat(document.getElementById('pago-monto').value);
             const metodo = document.getElementById('pago-metodo').value;
@@ -988,9 +987,24 @@ updatePagoAtletasSelector();
                 dbPagos.push(record);
             }
 
-            localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
-            resetPagoForm();
-            renderPagos();
+           localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
+
+try {
+    await window.firebaseAddDoc(
+        window.firebaseCollection(window.firebaseDB, "pagos"),
+        record
+    );
+
+    console.log("✅ Pago guardado en Firebase");
+
+} catch (error) {
+    console.error("❌ Error al guardar pago en Firebase:", error);
+    alert("El pago se guardó en la página, pero NO en Firebase.");
+    return;
+}
+
+resetPagoForm();
+renderPagos();
         }
 
         function resetPagoForm() {
