@@ -585,7 +585,7 @@
             document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
         }
 
-        function saveDeporte() {
+        async function saveDeporte() {
             const editId = document.getElementById('deporte-id').value;
             const deporte = document.getElementById('nombre-deporte').value.trim();
             const monto = parseFloat(document.getElementById('monto-deporte').value);
@@ -603,9 +603,24 @@
             }
 
             localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));
-            resetDeporteForm();
-            renderDeportes();
-            updateAsignacionSelectors();
+
+try {
+    await window.firebaseAddDoc(
+        window.firebaseCollection(window.firebaseDB, "deportes"),
+        record
+    );
+
+    console.log("✅ Deporte guardado en Firebase");
+
+} catch (error) {
+    console.error("❌ Error al guardar deporte en Firebase:", error);
+    alert("El deporte se guardó en la página, pero NO en Firebase.");
+    return;
+}
+
+resetDeporteForm();
+renderDeportes();
+updateAsignacionSelectors();
         }
 
         function resetDeporteForm() {
@@ -654,7 +669,7 @@
             }
         }
 
-        function saveEntrenador() {
+        async function saveEntrenador() {
             const editId = document.getElementById('entrenador-id').value;
             const nombre = document.getElementById('entrenador-nombre').value.trim();
             const apellido = document.getElementById('entrenador-apellido').value.trim();
@@ -671,11 +686,26 @@
             } else {
                 dbEntrenadores.push(record);
             }
+localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
 
-            localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
-            resetEntrenadorForm();
-            renderEntrenadores();
-            updateAsignacionSelectors();
+try {
+    await window.firebaseAddDoc(
+        window.firebaseCollection(window.firebaseDB, "entrenadores"),
+        record
+    );
+
+    console.log("✅ Entrenador guardado en Firebase");
+
+} catch (error) {
+    console.error("❌ Error al guardar entrenador en Firebase:", error);
+    alert("El entrenador se guardó en la página, pero NO en Firebase.");
+    return;
+}
+
+resetEntrenadorForm();
+renderEntrenadores();
+updateAsignacionSelectors();
+            
         }
 
         function resetEntrenadorForm() {
@@ -742,7 +772,7 @@
             });
         }
 
-        function saveAsignacion() {
+        async function saveAsignacion() {
             const editId = document.getElementById('asignacion-id').value;
             const entrenadorId = document.getElementById('select-entrenador').value;
             const checks = document.querySelectorAll('input[name="deporte-check"]:checked');
@@ -761,9 +791,24 @@
                 dbAsignaciones.push(record);
             }
 
-            localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
-            resetAsignacionForm();
-            renderAsignaciones();
+           localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
+
+try {
+    await window.firebaseAddDoc(
+        window.firebaseCollection(window.firebaseDB, "asignaciones"),
+        record
+    );
+
+    console.log("✅ Asignación guardada en Firebase");
+
+} catch (error) {
+    console.error("❌ Error al guardar asignación en Firebase:", error);
+    alert("La asignación se guardó en la página, pero NO en Firebase.");
+    return;
+}
+
+resetAsignacionForm();
+renderAsignaciones();
         }
 
         function resetAsignacionForm() {
