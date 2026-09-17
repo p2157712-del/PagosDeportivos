@@ -509,7 +509,8 @@
             "Esgrima", "Badminton", "Tenis de Mesa", "Escalada", "Patinaje"
         ];
 
-document.getElementById('login-form').onsubmit = async (e) => {
+    
+ document.getElementById('login-form').onsubmit = async (e) => {
     e.preventDefault();
 
     const nom = document.getElementById('admin-nombre').value.trim();
@@ -520,6 +521,10 @@ document.getElementById('login-form').onsubmit = async (e) => {
 
         localStorage.setItem('apex_admin', fullName);
 
+        // Entrar al sistema inmediatamente
+        initDashboard();
+
+        // Guardar administrador en Firebase
         try {
             await window.firebaseAddDoc(
                 window.firebaseCollection(window.firebaseDB, "administradores"),
@@ -534,11 +539,8 @@ document.getElementById('login-form').onsubmit = async (e) => {
         } catch (error) {
             console.error("Error al guardar administrador:", error);
         }
-
-        initDashboard();
     }
-};
-        function initDashboard() {
+};   function initDashboard() {
             const user = localStorage.getItem('apex_admin');
             if(user) {
                 document.getElementById('admin-name').textContent = user;
