@@ -508,17 +508,36 @@
             "Pilates", "Crossfit", "Rugby", "Handball", "Pádel", "Golf", 
             "Esgrima", "Badminton", "Tenis de Mesa", "Escalada", "Patinaje"
         ];
+document.getElementById('login-form').onsubmit = async (e) => {
+    e.preventDefault();
 
-        document.getElementById('login-form').onsubmit = (e) => {
-            e.preventDefault();
-            const nom = document.getElementById('admin-nombre').value.trim();
-            const ape = document.getElementById('admin-apellido').value.trim();
-            if(nom && ape) {
-                const fullName = `${nom} ${ape}`;
-                localStorage.setItem('apex_admin', fullName);
-                initDashboard();
-            }
-        };
+    const nom = document.getElementById('admin-nombre').value.trim();
+    const ape = document.getElementById('admin-apellido').value.trim();
+
+    if(nom && ape) {
+        const fullName = `${nom} ${ape}`;
+
+        localStorage.setItem('apex_admin', fullName);
+
+        try {
+            await window.firebaseAddDoc(
+                window.firebaseCollection(window.firebaseDB, "administradores"),
+                {
+                    nombre: nom,
+                    apellido: ape
+                }
+            );
+
+            console.log("Administrador guardado en Firebase");
+
+        } catch (error) {
+            console.error("Error al guardar administrador:", error);
+        }
+
+        initDashboard();
+    }
+};
+       
 
         function initDashboard() {
             const user = localStorage.getItem('apex_admin');
