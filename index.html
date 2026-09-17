@@ -508,13 +508,15 @@
             "Pilates", "Crossfit", "Rugby", "Handball", "Pádel", "Golf", 
             "Esgrima", "Badminton", "Tenis de Mesa", "Escalada", "Patinaje"
         ];
+
+
 document.getElementById('login-form').onsubmit = async (e) => {
     e.preventDefault();
 
     const nom = document.getElementById('admin-nombre').value.trim();
     const ape = document.getElementById('admin-apellido').value.trim();
 
-    if(nom && ape) {
+    if (nom && ape) {
         const fullName = `${nom} ${ape}`;
 
         localStorage.setItem('apex_admin', fullName);
@@ -528,6 +530,24 @@ document.getElementById('login-form').onsubmit = async (e) => {
                 }
             );
 
+            console.log("Administrador guardado en Firebase");
+
+        } catch (error) {
+            console.error("Error al guardar administrador:", error);
+        }
+
+        initDashboard();
+    }
+};
+            console.log("Administrador guardado en Firebase");
+
+        } catch (error) {
+            console.error("Error al guardar administrador:", error);
+        }
+
+        initDashboard();
+    }
+};
             console.log("Administrador guardado en Firebase");
 
         } catch (error) {
@@ -892,15 +912,7 @@ renderAsignaciones();
                 `;
             });
         }
-async function guardarAdministrador() {
-    const nombre = document.getElementById("nombre").value;
-    const apellido = document.getElementById("apellido").value;
 
-    await setDoc(doc(db, "administradores", "administrador1"), {
-        nombre: nombre,
-        apellido: apellido
-    });
-}
         async function saveAtleta() {
             const editId = document.getElementById('atleta-id-hidden').value;
             const cedula = parseInt(document.getElementById('atleta-cedula').value);
