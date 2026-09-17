@@ -472,7 +472,7 @@
     
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDh91TvqhSFgxRzFz1fsYhKpuyot5frpP0",
@@ -489,7 +489,8 @@
 
     window.firebaseDB = db;
     window.firebaseCollection = collection;
-    window.firebaseAddDoc = addDoc;
+    window.firebaseDoc = doc;
+window.firebaseSetDoc = setDoc;
 
     console.log("✅ Firebase conectado correctamente");
 </script>
@@ -508,6 +509,7 @@
             "Pilates", "Crossfit", "Rugby", "Handball", "Pádel", "Golf", 
             "Esgrima", "Badminton", "Tenis de Mesa", "Escalada", "Patinaje"
         ];
+
 document.getElementById('login-form').onsubmit = async (e) => {
     e.preventDefault();
 
@@ -520,14 +522,28 @@ document.getElementById('login-form').onsubmit = async (e) => {
         localStorage.setItem('apex_admin', fullName);
 
         try {
-            await window.firebaseAddDoc(
-                window.firebaseCollection(window.firebaseDB, "administradores"),
+            await window.firebaseSetDoc(
+                window.firebaseDoc(
+                    window.firebaseDB,
+                    "administradores",
+                    "administrador1"
+                ),
                 {
                     nombre: nom,
                     apellido: ape
                 }
             );
 
+            console.log("✅ Administrador guardado en Firebase");
+
+        } catch (error) {
+            console.error("❌ Error al guardar administrador:", error);
+            alert("No se pudo guardar el administrador en Firebase.");
+        }
+
+        initDashboard();
+    }
+};
             console.log("Administrador guardado en Firebase");
 
         } catch (error) {
@@ -892,7 +908,8 @@ renderAsignaciones();
                 `;
             });
         }
-  async function saveAtleta() {
+
+        async function saveAtleta() {
             const editId = document.getElementById('atleta-id-hidden').value;
             const cedula = parseInt(document.getElementById('atleta-cedula').value);
             const nombre = document.getElementById('atleta-nombre').value.trim();
