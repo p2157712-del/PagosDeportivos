@@ -1,2949 +1,1181 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Pro | Gestión Deportiva Premium</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary: #10b981;
-            --primary-hover: #059669;
-            --primary-light: rgba(16, 185, 129, 0.12);
-            --secondary: #0f172a;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --bg: #07120f;
-            --card-bg: rgba(20, 42, 35, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background-image:
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.10) 0px, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1250px;
-        }
-
-        .view {
-            display: none;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        .view.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #login-view {
-            max-width: 440px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .login-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
-        }
-
-        .login-logo i {
-            font-size: 2rem;
-            color: white;
-        }
-
-        #login-view h2 {
-            font-size: 1.75rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            letter-spacing: -0.025em;
-        }
-
-        #login-view p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 30px;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 14px 16px;
-            margin: 8px 0 16px 0;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 0.95rem;
-            color: var(--text-main);
-            transition: var(--transition);
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: var(--primary);
-            background: rgba(15, 23, 42, 0.9);
-            box-shadow: 0 0 0 4px var(--primary-light);
-            outline: none;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #64748b;
-        }
-
-        select option {
-            background: var(--secondary);
-            color: var(--text-main);
-        }
-
-        button {
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.95rem;
-            width: 100%;
-            transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 24px;
-            margin-bottom: 24px;
-        }
-
-        .admin-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .admin-avatar {
-            width: 44px;
-            height: 44px;
-            background: var(--primary-light);
-            border: 1px solid var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .btn-logout {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            width: auto;
-            font-size: 0.85rem;
-            padding: 10px 18px;
-            box-shadow: none;
-        }
-
-        .btn-logout:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            background: transparent;
-            color: var(--text-muted);
-            border: 1px solid transparent;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            width: auto;
-            transition: var(--transition);
-            white-space: nowrap;
-            box-shadow: none;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.03);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .tab-btn.active {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: rgba(16, 185, 129, 0.3);
-            box-shadow: none;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .card {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-
-        .sports-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .sport-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sport-card i {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        .sport-card span {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .sport-card:hover {
-            border-color: var(--primary);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .sport-card:hover i,
-        .sport-card:hover span {
-            color: var(--primary);
-        }
-
-        .sport-card.selected {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-        }
-
-        .sport-card.selected i,
-        .sport-card.selected span {
-            color: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .checkbox-group-container {
-            display: none;
-            margin-top: 10px;
-        }
-
-        .checkbox-group {
-            max-height: 180px;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            background: rgba(15, 23, 42, 0.6);
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            color: var(--text-main);
-        }
-
-        .checkbox-item input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            margin: 0;
-            cursor: pointer;
-        }
-
-        .table-container {
-            margin-top: 20px;
-            overflow-x: auto;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th,
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
-        }
-
-        th {
-            background: rgba(15, 23, 42, 0.8);
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .btn-edit {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            margin-right: 6px;
-            box-shadow: none;
-            border-radius: 8px;
-        }
-
-        .btn-edit:hover {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            box-shadow: none;
-            border-radius: 8px;
-        }
-
-        .btn-delete:hover {
-            background: var(--danger);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .toggle-row-btn {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--primary);
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: var(--transition);
-        }
-
-        .toggle-row-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .sub-row {
-            background-color: rgba(15, 23, 42, 0.8);
-            display: none;
-        }
-
-        .sub-table {
-            width: 95%;
-            margin: 10px auto;
-            background: rgba(9, 13, 22, 0.9);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        @media (max-width: 700px) {
-            .view {
-                padding: 20px;
-            }
-
-            .sports-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .btn-logout {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <!-- LOGIN -->
-    <div id="login-view" class="view active">
-
-        <div class="login-logo">
-            <i class="fas fa-shield-alt"></i>
-        </div>
-
-        <h2>Acceso Administrativo</h2>
-        <p>Ingrese sus credenciales para acceder al sistema</p>
-
-        <form id="login-form">
-
-            <input
-                type="text"
-                id="admin-nombre"
-                placeholder="Nombre"
-                required
-            >
-
-            <input
-                type="text"
-                id="admin-apellido"
-                placeholder="Apellido"
-                required
-            >
-
-            <button type="submit">
-                Iniciar Sesión Segura
-            </button>
-
-        </form>
-    </div>
-
-
-    <!-- DASHBOARD -->
-    <div id="dashboard-view" class="view">
-
-        <div class="header">
-
-            <div class="admin-badge">
-
-                <div class="admin-avatar" id="admin-initials">
-                    AD
-                </div>
-
-                <div>
-                    <h4
-                        style="font-size: 1.1rem; font-weight: 700;"
-                        id="admin-name"
-                    >
-                        Administrador
-                    </h4>
-
-                    <span style="font-size: 0.8rem; color: var(--success);">
-                        <i class="fas fa-circle" style="font-size: 6px;"></i>
-                        Sesión Activa
-                    </span>
-                </div>
-
-            </div>
-
-            <button class="btn-logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                Cerrar Sesión
-            </button>
-
-        </div>
-
-
-        <!-- TABS -->
-        <div class="tabs">
-
-            <button
-                class="tab-btn active"
-                onclick="switchTab('deportes')"
-            >
-                <i class="fas fa-futbol"></i>
-                Deportes
-            </button>
-
-            <button
-                class="tab-btn"
-                onclick="switchTab('entrenadores')"
-            >
-                <i class="fas fa-user-tie"></i>
-                Entrenadores
-            </button>
-
-            <button
-                class="tab-btn"
-                onclick="switchTab('deporte-entrenador')"
-            >
-                <i class="fas fa-link"></i>
-                Asignaciones
-            </button>
-
-            <button
-                class="tab-btn"
-                onclick="switchTab('atletas')"
-            >
-                <i class="fas fa-users"></i>
-                Atletas
-            </button>
-
-            <button
-                class="tab-btn"
-                onclick="switchTab('pagos')"
-            >
-                <i class="fas fa-cash-register"></i>
-                Pagos
-            </button>
-
-        </div>
-
-
-        <!-- DEPORTES -->
-        <div id="tab-deportes" class="tab-content active">
-
-            <div class="card">
-
-                <h4 style="margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-plus-circle"></i>
-                    Registrar Deporte
-                </h4>
-
-                <input type="hidden" id="deporte-id">
-
-                <div class="form-group">
-
-                    <label>
-                        Seleccionar Icono / Plantilla:
-                    </label>
-
-                    <div class="sports-grid" id="sports-options">
-
-                        <div
-                            class="sport-card"
-                            id="card-futbol"
-                            onclick="selectPresetSport('Fútbol', 'Entrenamiento táctico y físico en cancha de césped.')"
-                        >
-                            <i class="fas fa-futbol"></i>
-                            <span>Fútbol</span>
-                        </div>
-
-                        <div
-                            class="sport-card"
-                            id="card-basket"
-                            onclick="selectPresetSport('Básquet', 'Práctica de lanzamientos, drible y resistencia.')"
-                        >
-                            <i class="fas fa-basketball-ball"></i>
-                            <span>Básquet</span>
-                        </div>
-
-                        <div
-                            class="sport-card"
-                            id="card-natacion"
-                            onclick="selectPresetSport('Natación', 'Clases técnicas de estilos en piscina semi-olímpica.')"
-                        >
-                            <i class="fas fa-swimmer"></i>
-                            <span>Natación</span>
-                        </div>
-
-                        <div
-                            class="sport-card"
-                            id="card-gym"
-                            onclick="selectPresetSport('Gimnasio', 'Musculación, acondicionamiento y pesas libres.')"
-                        >
-                            <i class="fas fa-dumbbell"></i>
-                            <span>Gimnasio</span>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="nombre-deporte">
-                        Nombre del Deporte:
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nombre-deporte"
-                        placeholder="Ej. Tenis, Pádel..."
-                        required
-                        oninput="handleManualSportInput()"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="monto-deporte">
-                        Monto de Mensualidad ($):
-                    </label>
-
-                    <input
-                        type="number"
-                        id="monto-deporte"
-                        step="0.01"
-                        min="0"
-                        placeholder="Ej. 30.00"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="descripcion-deporte">
-                        Descripción:
-                    </label>
-
-                    <textarea
-                        id="descripcion-deporte"
-                        rows="3"
-                        placeholder="Detalles de la disciplina..."
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <button
-                    id="btn-save-deporte"
-                    onclick="saveDeporte()"
-                >
-                    Guardar Deporte
-                </button>
-
-            </div>
-
-
-            <div class="table-container">
-
-                <h4 style="margin-bottom: 15px; font-weight: 700;">
-                    Deportes Registrados
-                </h4>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Deporte</th>
-                            <th>Monto</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="table-deportes-body"></tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- ENTRENADORES -->
-        <div id="tab-entrenadores" class="tab-content">
-
-            <div class="card">
-
-                <h4 style="margin-bottom: 20px; font-weight: 700;">
-                    <i class="fas fa-user-plus"></i>
-                    Registrar Entrenador
-                </h4>
-
-                <input type="hidden" id="entrenador-id">
-
-                <div class="form-group">
-                    <label for="entrenador-nombre">Nombre:</label>
-                    <input
-                        type="text"
-                        id="entrenador-nombre"
-                        placeholder="Nombre"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="entrenador-apellido">Apellido:</label>
-                    <input
-                        type="text"
-                        id="entrenador-apellido"
-                        placeholder="Apellido"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="entrenador-telefono">Teléfono:</label>
-                    <input
-                        type="tel"
-                        id="entrenador-telefono"
-                        placeholder="Ej. +591 70000000"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="entrenador-descripcion">
-                        Descripción del Entrenador:
-                    </label>
-
-                    <textarea
-                        id="entrenador-descripcion"
-                        rows="3"
-                        placeholder="Especialidad, experiencia o notas..."
-                        required
-                    ></textarea>
-                </div>
-
-                <button
-                    id="btn-save-entrenador"
-                    onclick="saveEntrenador()"
-                >
-                    Guardar Entrenador
-                </button>
-
-            </div>
-
-
-            <div class="table-container">
-
-                <h4 style="margin-bottom: 15px; font-weight: 700;">
-                    Entrenadores Registrados
-                </h4>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Nombre & Apellido</th>
-                            <th>Teléfono</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="table-entrenadores-body"></tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- ASIGNACIONES -->
-        <div id="tab-deporte-entrenador" class="tab-content">
-
-            <div class="card">
-
-                <h4 style="margin-bottom: 20px; font-weight: 700;">
-                    <i class="fas fa-link"></i>
-                    Asignar Deportes
-                </h4>
-
-                <input type="hidden" id="asignacion-id">
-
-                <div class="form-group">
-
-                    <label for="select-entrenador">
-                        Seleccionar Entrenador:
-                    </label>
-
-                    <select id="select-entrenador" required>
-                        <option value="">-- Seleccione --</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="toggle-deportes-select">
-                        Ver Deportes Disponibles:
-                    </label>
-
-                    <select
-                        id="toggle-deportes-select"
-                        onchange="toggleDeportesView(this.value)"
-                    >
-                        <option value="">
-                            -- Seleccione una opción --
-                        </option>
-
-                        <option value="mostrar">
-                            Mostrar lista de deportes
-                        </option>
-                    </select>
-
-
-                    <div
-                        class="checkbox-group-container"
-                        id="sports-container-box"
-                    >
-
-                        <label style="font-size: 0.8rem; margin-bottom: 8px;">
-                            Seleccione uno o más:
-                        </label>
-
-                        <div
-                            class="checkbox-group"
-                            id="deportes-checkbox-container"
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="btn-save-asignacion"
-                    onclick="saveAsignacion()"
-                >
-                    Guardar Asignación
-                </button>
-
-            </div>
-
-
-            <div class="table-container">
-
-                <h4 style="margin-bottom: 15px; font-weight: 700;">
-                    Asignaciones Activas
-                </h4>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Entrenador</th>
-                            <th>Deportes Asignados</th>
-                            <th>Acciones</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="table-asignaciones-body"></tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- ATLETAS -->
-        <div id="tab-atletas" class="tab-content">
-
-            <div class="card">
-
-                <h4 style="margin-bottom: 20px; font-weight: 700;">
-                    <i class="fas fa-user-graduate"></i>
-                    Registrar Atleta
-                </h4>
-
-                <input type="hidden" id="atleta-id-hidden">
-
-                <div class="form-group">
-
-                    <label for="atleta-cedula">
-                        Cédula (Numérico):
-                    </label>
-
-                    <input
-                        type="number"
-                        id="atleta-cedula"
-                        placeholder="Ej. 12345678"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="atleta-nombre">
-                        Nombre:
-                    </label>
-
-                    <input
-                        type="text"
-                        id="atleta-nombre"
-                        placeholder="Nombre"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="atleta-apellido">
-                        Apellido:
-                    </label>
-
-                    <input
-                        type="text"
-                        id="atleta-apellido"
-                        placeholder="Apellido"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="atleta-telefono">
-                        Teléfono (Numérico):
-                    </label>
-
-                    <input
-                        type="number"
-                        id="atleta-telefono"
-                        placeholder="Ej. 70000000"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="toggle-atleta-deportes">
-                        Deportes del Atleta:
-                    </label>
-
-                    <select
-                        id="toggle-atleta-deportes"
-                        onchange="toggleAtletaDeportesView(this.value)"
-                    >
-
-                        <option value="">
-                            -- Seleccionar deportes --
-                        </option>
-
-                        <option value="mostrar">
-                            Mostrar lista de deportes
-                        </option>
-
-                    </select>
-
-
-                    <div
-                        class="checkbox-group-container"
-                        id="atleta-sports-container-box"
-                    >
-
-                        <label style="font-size: 0.8rem; margin-bottom: 8px;">
-                            Seleccione uno o más:
-                        </label>
-
-                        <div
-                            class="checkbox-group"
-                            id="atleta-deportes-checkbox-container"
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="btn-save-atleta"
-                    onclick="saveAtleta()"
-                >
-                    Guardar Atleta
-                </button>
-
-            </div>
-
-
-            <div class="table-container">
-
-                <h4 style="margin-bottom: 15px; font-weight: 700;">
-                    Atletas Registrados
-                </h4>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Cédula</th>
-                            <th>Nombre & Apellido</th>
-                            <th>Teléfono</th>
-                            <th>Deportes</th>
-                            <th>Acciones</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="table-atletas-body"></tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- PAGOS -->
-        <div id="tab-pagos" class="tab-content">
-
-            <div class="card">
-
-                <h4 style="margin-bottom: 20px; font-weight: 700;">
-                    <i class="fas fa-wallet"></i>
-                    Registro de Pagos Deportivos
-                </h4>
-
-                <input type="hidden" id="pago-id-hidden">
-
-                <div class="form-group">
-
-                    <label for="pago-monto">
-                        Monto ($):
-                    </label>
-
-                    <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        id="pago-monto"
-                        placeholder="Ej. 50.00"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="pago-metodo">
-                        Método de Pago:
-                    </label>
-
-                    <select id="pago-metodo" required>
-
-                        <option value="">
-                            -- Seleccione método --
-                        </option>
-
-                        <option value="Transferencia">
-                            Transferencia
-                        </option>
-
-                        <option value="Tarjeta">
-                            Tarjeta
-                        </option>
-
-                        <option value="Efectivo">
-                            Efectivo
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="pago-fecha">
-                        Fecha:
-                    </label>
-
-                    <input
-                        type="date"
-                        id="pago-fecha"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="select-atleta-pago">
-                        Atleta:
-                    </label>
-
-                    <select
-                        id="select-atleta-pago"
-                        onchange="onAtletaPagoSelected(this.value)"
-                        required
-                    >
-
-                        <option value="">
-                            -- Seleccione un atleta --
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Deportes del Atleta:
-                    </label>
-
-                    <div id="pago-deportes-container">
-
-                        <span
-                            style="color: var(--text-muted); font-size: 0.85rem;"
-                        >
-                            Seleccione un atleta primero...
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="btn-save-pago"
-                    onclick="savePago()"
-                >
-                    Guardar Pago
-                </button>
-
-            </div>
-
-
-            <div class="table-container">
-
-                <h4 style="margin-bottom: 15px; font-weight: 700;">
-                    Historial de Pagos
-                </h4>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Monto</th>
-                            <th>Método</th>
-                            <th>Fecha</th>
-                            <th>Atleta</th>
-                            <th>Deportes</th>
-                            <th>Historial / Pagos Anteriores</th>
-                            <th>Acciones</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="table-pagos-body"></tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
+<!DOCTYPE html>  <html lang="es">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Nexus Pro | Gestión Deportiva Premium</title>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">  
+    <style>  
+        :root {  
+            --primary: #6366f1;  
+            --primary-hover: #4f46e5;  
+            --primary-light: rgba(99, 102, 241, 0.1);  
+            --secondary: #0f172a;  
+            --accent: #f59e0b;  
+            --success: #10b981;  
+            --danger: #ef4444;  
+            --bg: #090d16;  
+            --card-bg: rgba(30, 41, 59, 0.7);  
+            --border: rgba(255, 255, 255, 0.08);  
+            --text-main: #f8fafc;  
+            --text-muted: #94a3b8;  
+            --radius: 16px;  
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);  
+        }  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }  
+
+    body {   
+        background: var(--bg);   
+        color: var(--text-main);   
+        min-height: 100vh;   
+        display: flex;   
+        justify-content: center;   
+        align-items: center;   
+        padding: 20px;  
+        background-image:   
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),  
+            radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);  
+        background-attachment: fixed;  
+    }  
+
+    .container { width: 100%; max-width: 1250px; }  
+
+    .view {   
+        display: none;   
+        background: var(--card-bg);   
+        backdrop-filter: blur(20px);  
+        border: 1px solid var(--border);  
+        border-radius: var(--radius);   
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);   
+        padding: 40px;   
+        animation: fadeIn 0.4s ease-out forwards;  
+    }  
+    .view.active { display: block; }  
+
+    @keyframes fadeIn {  
+        from { opacity: 0; transform: translateY(10px); }  
+        to { opacity: 1; transform: translateY(0); }  
+    }  
+
+    #login-view { max-width: 440px; margin: 0 auto; text-align: center; }  
+    .login-logo {  
+        width: 70px;  
+        height: 70px;  
+        background: linear-gradient(135deg, var(--primary), var(--accent));  
+        border-radius: 20px;  
+        display: flex;  
+        align-items: center;  
+        justify-content: center;  
+        margin: 0 auto 24px;  
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);  
+    }  
+    .login-logo i { font-size: 2rem; color: white; }  
+    #login-view h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.025em; }  
+    #login-view p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }  
+
+    input, textarea, select {   
+        width: 100%;   
+        padding: 14px 16px;   
+        margin: 8px 0 16px 0;   
+        background: rgba(15, 23, 42, 0.6);  
+        border: 1px solid var(--border);   
+        border-radius: 12px;   
+        font-size: 0.95rem;   
+        color: var(--text-main);  
+        transition: var(--transition);   
+    }  
+    input:focus, textarea:focus, select:focus {   
+        border-color: var(--primary);   
+        background: rgba(15, 23, 42, 0.9);  
+        box-shadow: 0 0 0 4px var(--primary-light);  
+        outline: none;   
+    }  
+    input::placeholder, textarea::placeholder { color: #64748b; }  
+    select option { background: var(--secondary); color: var(--text-main); }  
+
+    button {   
+        background: linear-gradient(135deg, var(--primary), var(--primary-hover));   
+        color: white;   
+        border: none;   
+        padding: 14px 24px;   
+        border-radius: 12px;   
+        cursor: pointer;   
+        font-weight: 700;   
+        font-size: 0.95rem;  
+        width: 100%;   
+        transition: var(--transition);  
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);  
+    }  
+    button:hover {   
+        transform: translateY(-2px);   
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);   
+    }  
+
+    .header {   
+        display: flex;   
+        justify-content: space-between;   
+        align-items: center;   
+        border-bottom: 1px solid var(--border);   
+        padding-bottom: 24px;   
+        margin-bottom: 24px;   
+    }  
+    .admin-badge { display: flex; align-items: center; gap: 12px; }  
+    .admin-avatar {  
+        width: 44px; height: 44px; background: var(--primary-light);  
+        border: 1px solid var(--primary); border-radius: 50%;  
+        display: flex; align-items: center; justify-content: center;  
+        color: var(--primary); font-weight: bold;  
+    }  
+    .btn-logout {   
+        background: rgba(239, 68, 68, 0.1); color: var(--danger);  
+        border: 1px solid rgba(239, 68, 68, 0.2); width: auto;   
+        font-size: 0.85rem; padding: 10px 18px; box-shadow: none;  
+    }  
+    .btn-logout:hover { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }  
+
+    .tabs {   
+        display: flex; gap: 8px; margin-bottom: 30px;   
+        border-bottom: 1px solid var(--border); padding-bottom: 12px; overflow-x: auto;   
+    }  
+    .tab-btn {   
+        background: transparent; color: var(--text-muted); border: 1px solid transparent;   
+        padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem;  
+        width: auto; transition: var(--transition); white-space: nowrap; box-shadow: none;  
+    }  
+    .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.03); transform: none; box-shadow: none; }  
+    .tab-btn.active {   
+        background: var(--primary-light); color: var(--primary);   
+        border-color: rgba(99, 102, 241, 0.3); box-shadow: none;  
+    }  
+
+    .tab-content { display: none; }  
+    .tab-content.active { display: block; }  
+
+    .card { background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; margin-bottom: 25px; }  
+
+    .sports-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }  
+    .sport-card {   
+        background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border);   
+        border-radius: 12px; padding: 14px 8px; text-align: center; cursor: pointer;   
+        transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 8px;  
+    }  
+    .sport-card i { font-size: 1.5rem; color: var(--text-muted); transition: var(--transition); }  
+    .sport-card span { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }  
+    .sport-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.05); }  
+    .sport-card:hover i, .sport-card:hover span { color: var(--primary); }  
+    .sport-card.selected { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }  
+    .sport-card.selected i, .sport-card.selected span { color: var(--primary); }  
+
+    .form-group { margin-bottom: 18px; text-align: left; }  
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }  
+
+    .checkbox-group-container { display: none; margin-top: 10px; }  
+    .checkbox-group { max-height: 180px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: rgba(15, 23, 42, 0.6); }  
+    .checkbox-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 0.95rem; cursor: pointer; color: var(--text-main); }  
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; cursor: pointer; }  
+
+    /* TABLAS PREMIUM */  
+    .table-container { margin-top: 20px; overflow-x: auto; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }  
+    table { width: 100%; border-collapse: collapse; text-align: left; }  
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }  
+    th { background: rgba(15, 23, 42, 0.8); color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; font-weight: 700; }  
+    tr:hover td { background: rgba(255, 255, 255, 0.01); }  
+
+    .btn-edit { background: rgba(245, 158, 11, 0.15); color: var(--accent); border: 1px solid rgba(245, 158, 11, 0.3); width: auto; padding: 6px 12px; font-size: 0.8rem; margin-right: 6px; box-shadow: none; border-radius: 8px; }  
+    .btn-edit:hover { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }  
+
+    .btn-delete { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); width: auto; padding: 6px 12px; font-size: 0.8rem; box-shadow: none; border-radius: 8px; }  
+    .btn-delete:hover { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }  
+
+    .toggle-row-btn { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--primary); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); }  
+    .toggle-row-btn:hover { background: var(--primary); color: white; }  
+    .sub-row { background-color: rgba(15, 23, 42, 0.8); display: none; }  
+    .sub-table { width: 95%; margin: 10px auto; background: rgba(9, 13, 22, 0.9); border-radius: 8px; border: 1px solid var(--border); }  
+</style>
+
+</head>  
+<body>  <div class="container">  
+    <div id="login-view" class="view active">  
+        <div class="login-logo">  
+            <i class="fas fa-shield-alt"></i>  
+        </div>  
+        <h2>Acceso Administrativo</h2>  
+        <p>Ingrese sus credenciales para acceder al sistema</p>  
+        <form id="login-form">  
+            <input type="text" id="admin-nombre" placeholder="Nombre" required>  
+            <input type="text" id="admin-apellido" placeholder="Apellido" required>  
+            <button type="submit">Iniciar Sesión Segura</button>  
+        </form>  
+    </div>  
+
+    <div id="dashboard-view" class="view">  
+        <div class="header">  
+            <div class="admin-badge">  
+                <div class="admin-avatar" id="admin-initials">AD</div>  
+                <div>  
+                    <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>  
+                    <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>  
+                </div>  
+            </div>  
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>  
+        </div>  
+
+        <div class="tabs">  
+            <button class="tab-btn active" onclick="switchTab('deportes')"><i class="fas fa-futbol"></i> Deportes</button>  
+            <button class="tab-btn" onclick="switchTab('entrenadores')"><i class="fas fa-user-tie"></i> Entrenadores</button>  
+            <button class="tab-btn" onclick="switchTab('deporte-entrenador')"><i class="fas fa-link"></i> Asignaciones</button>  
+            <button class="tab-btn" onclick="switchTab('atletas')"><i class="fas fa-users"></i> Atletas</button>  
+            <button class="tab-btn" onclick="switchTab('pagos')"><i class="fas fa-cash-register"></i> Pagos</button>  
+        </div>  
+
+        <div id="tab-deportes" class="tab-content active">  
+            <div class="card">  
+                <h4 style="margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fas fa-plus-circle text-primary"></i> Registrar Deporte</h4>  
+                <input type="hidden" id="deporte-id">  
+                <div class="form-group">  
+                    <label>Seleccionar Icono / Plantilla:</label>  
+                    <div class="sports-grid" id="sports-options">  
+                        <div class="sport-card" id="card-futbol" onclick="selectPresetSport('Fútbol', 'Entrenamiento táctico y físico en cancha de césped.')">  
+                            <i class="fas fa-futbol"></i><span>Fútbol</span>  
+                        </div>  
+                        <div class="sport-card" id="card-basket" onclick="selectPresetSport('Básquet', 'Práctica de lanzamientos, drible y resistencia.')">  
+                            <i class="fas fa-basketball-ball"></i><span>Básquet</span>  
+                        </div>  
+                        <div class="sport-card" id="card-natacion" onclick="selectPresetSport('Natación', 'Clases técnicas de estilos en piscina semi-olímpica.')">  
+                            <i class="fas fa-swimmer"></i><span>Natación</span>  
+                        </div>  
+                        <div class="sport-card" id="card-gym" onclick="selectPresetSport('Gimnasio', 'Musculación, acondicionamiento y pesas libres.')">  
+                            <i class="fas fa-dumbbell"></i><span>Gimnasio</span>  
+                        </div>  
+                    </div>  
+                </div>  
+                <div class="form-group">  
+                    <label for="nombre-deporte">Nombre del Deporte:</label>  
+                    <input type="text" id="nombre-deporte" placeholder="Ej. Tenis, Pádel..." required oninput="handleManualSportInput()">  
+                </div>  
+                <div class="form-group">  
+                    <label for="monto-deporte">Monto de Mensualidad ($):</label>  
+                    <input type="number" id="monto-deporte" step="0.01" min="0" placeholder="Ej. 30.00" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="descripcion-deporte">Descripción:</label>  
+                    <textarea id="descripcion-deporte" rows="3" placeholder="Detalles de la disciplina..." required></textarea>  
+                </div>  
+                <button id="btn-save-deporte" onclick="saveDeporte()">Guardar Deporte</button>  
+            </div>  
+
+            <div class="table-container">  
+                <h4 style="margin-bottom: 15px; font-weight: 700;">Deportes Registrados</h4>  
+                <table>  
+                    <thead>  
+                        <tr>  
+                            <th>Deporte</th>  
+                            <th>Monto</th>  
+                            <th>Descripción</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="table-deportes-body"></tbody>  
+                </table>  
+            </div>  
+        </div>  
+
+        <div id="tab-entrenadores" class="tab-content">  
+            <div class="card">  
+                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-user-plus text-primary"></i> Registrar Entrenador</h4>  
+                <input type="hidden" id="entrenador-id">  
+                <div class="form-group">  
+                    <label for="entrenador-nombre">Nombre:</label>  
+                    <input type="text" id="entrenador-nombre" placeholder="Nombre" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="entrenador-apellido">Apellido:</label>  
+                    <input type="text" id="entrenador-apellido" placeholder="Apellido" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="entrenador-telefono">Teléfono:</label>  
+                    <input type="tel" id="entrenador-telefono" placeholder="Ej. +591 70000000" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="entrenador-descripcion">Descripción del Entrenador:</label>  
+                    <textarea id="entrenador-descripcion" rows="3" placeholder="Especialidad, experiencia o notas..." required></textarea>  
+                </div>  
+                <button id="btn-save-entrenador" onclick="saveEntrenador()">Guardar Entrenador</button>  
+            </div>  
+
+            <div class="table-container">  
+                <h4 style="margin-bottom: 15px; font-weight: 700;">Entrenadores Registrados</h4>  
+                <table>  
+                    <thead>  
+                        <tr>  
+                            <th>Nombre & Apellido</th>  
+                            <th>Teléfono</th>  
+                            <th>Descripción</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="table-entrenadores-body"></tbody>  
+                </table>  
+            </div>  
+        </div>  
+
+        <div id="tab-deporte-entrenador" class="tab-content">  
+            <div class="card">  
+                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-link text-primary"></i> Asignar Deportes</h4>  
+                <input type="hidden" id="asignacion-id">  
+                <div class="form-group">  
+                    <label for="select-entrenador">Seleccionar Entrenador:</label>  
+                    <select id="select-entrenador" required>  
+                        <option value="">-- Seleccione --</option>  
+                    </select>  
+                </div>  
+                <div class="form-group">  
+                    <label for="toggle-deportes-select">Ver Deportes Disponibles:</label>  
+                    <select id="toggle-deportes-select" onchange="toggleDeportesView(this.value)">  
+                        <option value="">-- Seleccione una opción --</option>  
+                        <option value="mostrar">Mostrar lista de deportes</option>  
+                    </select>  
+                    <div class="checkbox-group-container" id="sports-container-box">  
+                        <label style="font-size: 0.8rem; margin-bottom: 8px;">Seleccione uno o más:</label>  
+                        <div class="checkbox-group" id="deportes-checkbox-container"></div>  
+                    </div>  
+                </div>  
+                <button id="btn-save-asignacion" onclick="saveAsignacion()">Guardar Asignación</button>  
+            </div>  
+
+            <div class="table-container">  
+                <h4 style="margin-bottom: 15px; font-weight: 700;">Asignaciones Activas</h4>  
+                <table>  
+                    <thead>  
+                        <tr>  
+                            <th>Entrenador</th>  
+                            <th>Deportes Asignados</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="table-asignaciones-body"></tbody>  
+                </table>  
+            </div>  
+        </div>  
+
+        <div id="tab-atletas" class="tab-content">  
+            <div class="card">  
+                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-user-graduate text-primary"></i> Registrar Atleta</h4>  
+                <input type="hidden" id="atleta-id-hidden">  
+                <div class="form-group">  
+                    <label for="atleta-cedula">Cédula (Numérico):</label>  
+                    <input type="number" id="atleta-cedula" placeholder="Ej. 12345678" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="atleta-nombre">Nombre:</label>  
+                    <input type="text" id="atleta-nombre" placeholder="Nombre" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="atleta-apellido">Apellido:</label>  
+                    <input type="text" id="atleta-apellido" placeholder="Apellido" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="atleta-telefono">Teléfono (Numérico):</label>  
+                    <input type="number" id="atleta-telefono" placeholder="Ej. 70000000" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="toggle-atleta-deportes">Deportes del Atleta:</label>  
+                    <select id="toggle-atleta-deportes" onchange="toggleAtletaDeportesView(this.value)">  
+                        <option value="">-- Seleccionar deportes --</option>  
+                        <option value="mostrar">Mostrar lista de deportes</option>  
+                    </select>  
+                    <div class="checkbox-group-container" id="atleta-sports-container-box">  
+                        <label style="font-size: 0.8rem; margin-bottom: 8px;">Seleccione uno o más:</label>  
+                        <div class="checkbox-group" id="atleta-deportes-checkbox-container"></div>  
+                    </div>  
+                </div>  
+                <button id="btn-save-atleta" onclick="saveAtleta()">Guardar Atleta</button>  
+            </div>  
+
+            <div class="table-container">  
+                <h4 style="margin-bottom: 15px; font-weight: 700;">Atletas Registrados</h4>  
+                <table>  
+                    <thead>  
+                        <tr>  
+                            <th>Cédula</th>  
+                            <th>Nombre & Apellido</th>  
+                            <th>Teléfono</th>  
+                            <th>Deportes</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="table-atletas-body"></tbody>  
+                </table>  
+            </div>  
+        </div>  
+
+        <div id="tab-pagos" class="tab-content">  
+            <div class="card">  
+                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-wallet text-primary"></i> Registro de Pagos Deportivos</h4>  
+                <input type="hidden" id="pago-id-hidden">  
+                <div class="form-group">  
+                    <label for="pago-monto">Monto ($):</label>  
+                    <input type="number" step="0.01" min="0" id="pago-monto" placeholder="Ej. 50.00" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="pago-metodo">Método de Pago:</label>  
+                    <select id="pago-metodo" required>  
+                        <option value="">-- Seleccione método --</option>  
+                        <option value="Transferencia">Transferencia</option>  
+                        <option value="Tarjeta">Tarjeta</option>  
+                        <option value="Efectivo">Efectivo</option>  
+                    </select>  
+                </div>  
+                <div class="form-group">  
+                    <label for="pago-fecha">Fecha:</label>  
+                    <input type="date" id="pago-fecha" required>  
+                </div>  
+                <div class="form-group">  
+                    <label for="select-atleta-pago">Atleta:</label>  
+                    <select id="select-atleta-pago" onchange="onAtletaPagoSelected(this.value)" required>  
+                        <option value="">-- Seleccione un atleta --</option>  
+                    </select>  
+                </div>  
+                <div class="form-group">  
+                    <label>Deportes del Atleta:</label>  
+                    <div id="pago-deportes-container">  
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>  
+                    </div>  
+                </div>  
+                <button id="btn-save-pago" onclick="savePago()">Guardar Pago</button>  
+            </div>  
+
+            <div class="table-container">  
+                <h4 style="margin-bottom: 15px; font-weight: 700;">Historial de Pagos</h4>  
+                <table>  
+                    <thead>  
+                        <tr>  
+                            <th>Monto</th>  
+                            <th>Método</th>  
+                            <th>Fecha</th>  
+                            <th>Atleta</th>  
+                            <th>Deportes</th>  
+                            <th>Historial / Pagos Anteriores</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="table-pagos-body"></tbody>  
+                </table>  
+            </div>  
+        </div>  
+
+    </div>  
 </div>
 
+<script type="module">  
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";  
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";  
+  
+    const firebaseConfig = {  
+        apiKey: "AIzaSyDh91TvqhSFgxRzFz1fsYhKpuyot5frpP0",  
+        authDomain: "pagosdeportivos.firebaseapp.com",  
+        projectId: "pagosdeportivos",  
+        storageBucket: "pagosdeportivos.firebasestorage.app",  
+        messagingSenderId: "873416848905",  
+        appId: "1:873416848905:web:47b88fd58e49b5434caad8",  
+        measurementId: "G-N46ZN36L2M"  
+    };  
+  
+    const app = initializeApp(firebaseConfig);  
+    const db = getFirestore(app);  
+  
+    window.firebaseDB = db;  
+    window.firebaseCollection = collection;  
+    window.firebaseAddDoc = addDoc;  
+  
+    console.log("✅ Firebase conectado correctamente");  
+</script>  <script>  
+      
+    let dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];  
+    let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];  
+    let dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];  
+    let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];  
+    let dbPagos = JSON.parse(localStorage.getItem('apex_pagos')) || [];  
 
-<!-- FIREBASE -->
-<script type="module">
-
-    import {
-        initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-    import {
-        getFirestore,
-        collection,
-        addDoc
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-    const firebaseConfig = {
-
-        apiKey: "AIzaSyDh91TvqhSFgxRzFz1fsYhKpuyot5frpP0",
-
-        authDomain: "pagosdeportivos.firebaseapp.com",
-
-        projectId: "pagosdeportivos",
-
-        storageBucket: "pagosdeportivos.firebasestorage.app",
-
-        messagingSenderId: "873416848905",
-
-        appId: "1:873416848905:web:47b88fd58e49b5434caad8",
-
-        measurementId: "G-N46ZN36L2M"
-
-    };
-
-
-    const app = initializeApp(firebaseConfig);
-
-    const db = getFirestore(app);
-
-
-    window.firebaseDB = db;
-
-    window.firebaseCollection = collection;
-
-    window.firebaseAddDoc = addDoc;
-
-
-    console.log("Firebase conectado correctamente");
-
-</script>
-
-
-<script>
-
-    /* =========================
-       BASE LOCAL
-    ========================= */
-
-    let dbDeportes =
-        JSON.parse(localStorage.getItem('apex_deportes')) || [];
-
-    let dbEntrenadores =
-        JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-
-    let dbAsignaciones =
-        JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
-
-    let dbAtletas =
-        JSON.parse(localStorage.getItem('apex_atletas')) || [];
-
-    let dbPagos =
-        JSON.parse(localStorage.getItem('apex_pagos')) || [];
-
-
-    const variosDeportesFijos = [
-
-        "Fútbol",
-        "Básquet",
-        "Natación",
-        "Gimnasio",
-        "Tenis",
-        "Vólei",
-        "Atletismo",
-        "Ciclismo",
-        "Boxeo",
-        "Artes Marciales",
-        "Yoga",
-        "Pilates",
-        "Crossfit",
-        "Rugby",
-        "Handball",
-        "Pádel",
-        "Golf",
-        "Esgrima",
-        "Badminton",
-        "Tenis de Mesa",
-        "Escalada",
-        "Patinaje"
-
+    const variosDeportesFijos = [  
+        "Fútbol", "Básquet", "Natación", "Gimnasio", "Tenis", "Vólei",   
+        "Atletismo", "Ciclismo", "Boxeo", "Artes Marciales", "Yoga",   
+        "Pilates", "Crossfit", "Rugby", "Handball", "Pádel", "Golf",   
+        "Esgrima", "Badminton", "Tenis de Mesa", "Escalada", "Patinaje"  
     ];
 
+document.getElementById('login-form').onsubmit = async (e) => {
+e.preventDefault();
 
-    /* =========================
-       LOGIN ADMINISTRADOR
-    ========================= */
+const nom = document.getElementById('admin-nombre').value.trim();  
+const ape = document.getElementById('admin-apellido').value.trim();  
 
-    document.getElementById('login-form').onsubmit = async function(e) {
+if (nom && ape) {  
+    const fullName = `${nom} ${ape}`;  
 
-        e.preventDefault();
+    localStorage.setItem('apex_admin', fullName);  
 
+    // Entrar al sistema inmediatamente  
+    initDashboard();  
 
-        const nom =
-            document.getElementById('admin-nombre').value.trim();
+    // Guardar administrador en Firebase  
+    try {  
+        await window.firebaseAddDoc(  
+            window.firebaseCollection(window.firebaseDB, "administradores"),  
+            {  
+                nombre: nom,  
+                apellido: ape  
+            }  
+        );  
 
-        const ape =
-            document.getElementById('admin-apellido').value.trim();
+        console.log("Administrador guardado en Firebase");  
 
+    } catch (error) {  
+        console.error("Error al guardar administrador:", error);  
+    }  
+}
 
-        if (!nom || !ape) {
+};   function initDashboard() {
+const user = localStorage.getItem('apex_admin');
+if(user) {
+document.getElementById('admin-name').textContent = user;
+const initials = user.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+document.getElementById('admin-initials').textContent = initials;
 
-            alert("Ingrese nombre y apellido.");
+document.getElementById('login-view').classList.remove('active');  
+            document.getElementById('dashboard-view').classList.add('active');  
+              
+            renderDeportes();  
+            renderEntrenadores();  
+            updateAsignacionSelectors();  
+            renderAsignaciones();  
+            updateAtletaDeportesSelectors();  
+            renderAtletas();  
+            updatePagoAtletasSelector();  
+            renderPagos();  
+        }  
+    }  
 
-            return;
+    function logout() {  
+        localStorage.removeItem('apex_admin');  
+        location.reload();  
+    }  
 
+    function switchTab(tabName) {  
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));  
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));  
+
+        const tabsMap = { 'deportes': 0, 'entrenadores': 1, 'deporte-entrenador': 2, 'atletas': 3, 'pagos': 4 };  
+        const idx = tabsMap[tabName];  
+          
+        document.querySelectorAll('.tab-btn')[idx].classList.add('active');  
+        document.getElementById(`tab-${tabName}`).classList.add('active');  
+
+        if(tabName === 'deporte-entrenador') updateAsignacionSelectors();  
+        if(tabName === 'atletas') updateAtletaDeportesSelectors();  
+        if(tabName === 'pagos') updatePagoAtletasSelector();  
+    }  
+
+    function toggleDeportesView(value) {  
+        const box = document.getElementById('sports-container-box');  
+        box.style.display = (value === 'mostrar') ? 'block' : 'none';  
+        if(value !== 'mostrar') document.querySelectorAll('input[name="deporte-check"]').forEach(cb => cb.checked = false);  
+    }  
+
+    function toggleAtletaDeportesView(value) {  
+        const box = document.getElementById('atleta-sports-container-box');  
+        box.style.display = (value === 'mostrar') ? 'block' : 'none';  
+        if(value !== 'mostrar') document.querySelectorAll('input[name="atleta-deporte-check"]').forEach(cb => cb.checked = false);  
+    }  
+
+    function selectPresetSport(nombre, desc) {  
+        document.getElementById('nombre-deporte').value = nombre;  
+        document.getElementById('descripcion-deporte').value = desc;  
+        document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));  
+        const map = { 'Fútbol': 'futbol', 'Básquet': 'basket', 'Natación': 'natacion', 'Gimnasio': 'gym' };  
+        if(map[nombre]) document.getElementById(`card-${map[nombre]}`).classList.add('selected');  
+    }  
+
+    function handleManualSportInput() {  
+        document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));  
+    }  
+
+    async function saveDeporte() {  
+        const editId = document.getElementById('deporte-id').value;  
+        const deporte = document.getElementById('nombre-deporte').value.trim();  
+        const monto = parseFloat(document.getElementById('monto-deporte').value);  
+        const descripcion = document.getElementById('descripcion-deporte').value.trim();  
+
+        if(!deporte || isNaN(monto) || !descripcion) return alert("Complete todos los campos del deporte.");  
+
+        const record = { id: editId ? parseInt(editId) : Date.now(), deporte, monto, descripcion };  
+        if(editId) {  
+            dbDeportes = dbDeportes.map(i => i.id === record.id ? record : i);  
+            document.getElementById('deporte-id').value = "";  
+            document.getElementById('btn-save-deporte').textContent = "Guardar Deporte";  
+        } else {  
+            dbDeportes.push(record);  
+        }  
+
+        localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));
+
+try {
+await window.firebaseAddDoc(
+window.firebaseCollection(window.firebaseDB, "deportes"),
+record
+);
+
+console.log("✅ Deporte guardado en Firebase");
+
+} catch (error) {
+console.error("❌ Error al guardar deporte en Firebase:", error);
+alert("El deporte se guardó en la página, pero NO en Firebase.");
+return;
+}
+
+resetDeporteForm();
+renderDeportes();
+updateAsignacionSelectors();
+}
+
+function resetDeporteForm() {  
+        document.getElementById('deporte-id').value = "";  
+        document.getElementById('nombre-deporte').value = "";  
+        document.getElementById('monto-deporte').value = "";  
+        document.getElementById('descripcion-deporte').value = "";  
+        document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));  
+    }  
+
+    function renderDeportes() {  
+        const tbody = document.getElementById('table-deportes-body');  
+        tbody.innerHTML = dbDeportes.length === 0 ? `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';  
+        dbDeportes.forEach(item => {  
+            tbody.innerHTML += `  
+                <tr>  
+                    <td><strong>${item.deporte}</strong></td>  
+                    <td style="color: var(--success); font-weight:700;">$${item.monto.toFixed(2)}</td>  
+                    <td>${item.descripcion}</td>  
+                    <td>  
+                        <button class="btn-edit" onclick="editDeporte(${item.id})"><i class="fas fa-edit"></i></button>  
+                        <button class="btn-delete" onclick="deleteDeporte(${item.id})"><i class="fas fa-trash"></i></button>  
+                    </td>  
+                </tr>  
+            `;  
+        });  
+    }  
+
+    function editDeporte(id) {  
+        const item = dbDeportes.find(i => i.id === id);  
+        if(!item) return;  
+        document.getElementById('deporte-id').value = item.id;  
+        document.getElementById('nombre-deporte').value = item.deporte;  
+        document.getElementById('monto-deporte').value = item.monto;  
+        document.getElementById('descripcion-deporte').value = item.descripcion;  
+        document.getElementById('btn-save-deporte').textContent = "Actualizar Deporte";  
+        window.scrollTo(0, 0);  
+    }  
+
+    function deleteDeporte(id) {  
+        if(confirm("¿Eliminar deporte?")) {  
+            dbDeportes = dbDeportes.filter(i => i.id !== id);  
+            localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));  
+            renderDeportes();  
+            updateAsignacionSelectors();  
+        }  
+    }  
+
+    async function saveEntrenador() {  
+        const editId = document.getElementById('entrenador-id').value;  
+        const nombre = document.getElementById('entrenador-nombre').value.trim();  
+        const apellido = document.getElementById('entrenador-apellido').value.trim();  
+        const telefono = document.getElementById('entrenador-telefono').value.trim();  
+        const descripcion = document.getElementById('entrenador-descripcion').value.trim();  
+
+        if(!nombre || !apellido || !telefono || !descripcion) return alert("Complete todos los campos del entrenador.");  
+
+        const record = { id: editId ? parseInt(editId) : Math.floor(1000 + Math.random() * 9000), nombre, apellido, telefono, descripcion };  
+        if(editId) {  
+            dbEntrenadores = dbEntrenadores.map(i => i.id === record.id ? record : i);  
+            document.getElementById('entrenador-id').value = "";  
+            document.getElementById('btn-save-entrenador').textContent = "Guardar Entrenador";  
+        } else {  
+            dbEntrenadores.push(record);  
         }
 
-
-        const fullName = `${nom} ${ape}`;
-
-
-        /* Guardar localmente */
-
-        localStorage.setItem('apex_admin', fullName);
-
-
-        /* Entrar al sistema */
-
-        initDashboard();
-
-
-        /* Guardar administrador en Firebase */
-
-        try {
-
-            await window.firebaseAddDoc(
-
-                window.firebaseCollection(
-                    window.firebaseDB,
-                    "administradores"
-                ),
-
-                {
-                    nombre: nom,
-                    apellido: ape
-                }
-
-            );
-
-
-            console.log(
-                "Administrador guardado correctamente en Firebase."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al guardar administrador en Firebase:",
-                error
-            );
-
-
-            alert(
-                "El administrador se guardó en la página, pero NO se pudo guardar en Firebase. Revisa las reglas de Firestore."
-            );
-
-        }
-
-    };
-
-
-    /* =========================
-       DASHBOARD
-    ========================= */
-
-    function initDashboard() {
-
-        const user =
-            localStorage.getItem('apex_admin');
-
-
-        if (user) {
-
-            document.getElementById('admin-name').textContent = user;
-
-
-            const initials =
-                user
-                    .split(' ')
-                    .map(n => n[0])
-                    .join('')
-                    .substring(0, 2)
-                    .toUpperCase();
-
-
-            document.getElementById('admin-initials').textContent =
-                initials;
-
-
-            document
-                .getElementById('login-view')
-                .classList.remove('active');
-
-
-            document
-                .getElementById('dashboard-view')
-                .classList.add('active');
-
-
-            renderDeportes();
-
-            renderEntrenadores();
-
-            updateAsignacionSelectors();
-
-            renderAsignaciones();
-
-            updateAtletaDeportesSelectors();
-
-            renderAtletas();
-
-            updatePagoAtletasSelector();
-
-            renderPagos();
-
-        }
-
-    }
-
-
-    /* =========================
-       CERRAR SESIÓN
-    ========================= */
-
-    function logout() {
-
-        localStorage.removeItem('apex_admin');
-
-        location.reload();
-
-    }
-
-
-    /* =========================
-       PESTAÑAS
-    ========================= */
-
-    function switchTab(tabName) {
-
-        document
-            .querySelectorAll('.tab-btn')
-            .forEach(btn =>
-                btn.classList.remove('active')
-            );
-
-
-        document
-            .querySelectorAll('.tab-content')
-            .forEach(content =>
-                content.classList.remove('active')
-            );
-
-
-        const tabsMap = {
-
-            deportes: 0,
-
-            entrenadores: 1,
-
-            'deporte-entrenador': 2,
-
-            atletas: 3,
-
-            pagos: 4
-
-        };
-
-
-        const idx = tabsMap[tabName];
-
-
-        document
-            .querySelectorAll('.tab-btn')[idx]
-            .classList.add('active');
-
-
-        document
-            .getElementById(`tab-${tabName}`)
-            .classList.add('active');
-
-
-        if (tabName === 'deporte-entrenador')
-            updateAsignacionSelectors();
-
-
-        if (tabName === 'atletas')
-            updateAtletaDeportesSelectors();
-
-
-        if (tabName === 'pagos')
-            updatePagoAtletasSelector();
-
-    }
-
-
-    /* =========================
-       MOSTRAR DEPORTES
-    ========================= */
-
-    function toggleDeportesView(value) {
-
-        const box =
-            document.getElementById('sports-container-box');
-
-
-        box.style.display =
-            value === 'mostrar'
-                ? 'block'
-                : 'none';
-
-
-        if (value !== 'mostrar') {
-
-            document
-                .querySelectorAll(
-                    'input[name="deporte-check"]'
-                )
-                .forEach(cb =>
-                    cb.checked = false
-                );
-
-        }
-
-    }
-
-
-    function toggleAtletaDeportesView(value) {
-
-        const box =
-            document.getElementById(
-                'atleta-sports-container-box'
-            );
-
-
-        box.style.display =
-            value === 'mostrar'
-                ? 'block'
-                : 'none';
-
-
-        if (value !== 'mostrar') {
-
-            document
-                .querySelectorAll(
-                    'input[name="atleta-deporte-check"]'
-                )
-                .forEach(cb =>
-                    cb.checked = false
-                );
-
-        }
-
-    }
-
-
-    /* =========================
-       DEPORTES
-    ========================= */
-
-    function selectPresetSport(nombre, desc) {
-
-        document.getElementById(
-            'nombre-deporte'
-        ).value = nombre;
-
-
-        document.getElementById(
-            'descripcion-deporte'
-        ).value = desc;
-
-
-        document
-            .querySelectorAll('.sport-card')
-            .forEach(c =>
-                c.classList.remove('selected')
-            );
-
-
-        const map = {
-
-            'Fútbol': 'futbol',
-
-            'Básquet': 'basket',
-
-            'Natación': 'natacion',
-
-            'Gimnasio': 'gym'
-
-        };
-
-
-        if (map[nombre]) {
-
-            document
-                .getElementById(
-                    `card-${map[nombre]}`
-                )
-                .classList.add('selected');
-
-        }
-
-    }
-
-
-    function handleManualSportInput() {
-
-        document
-            .querySelectorAll('.sport-card')
-            .forEach(c =>
-                c.classList.remove('selected')
-            );
-
-    }
-
-
-    async function saveDeporte() {
-
-        const editId =
-            document.getElementById(
-                'deporte-id'
-            ).value;
-
-
-        const deporte =
-            document.getElementById(
-                'nombre-deporte'
-            ).value.trim();
-
-
-        const monto =
-            parseFloat(
-                document.getElementById(
-                    'monto-deporte'
-                ).value
-            );
-
-
-        const descripcion =
-            document.getElementById(
-                'descripcion-deporte'
-            ).value.trim();
-
-
-        if (
-            !deporte ||
-            isNaN(monto) ||
-            !descripcion
-        ) {
-
-            return alert(
-                "Complete todos los campos del deporte."
-            );
-
-        }
-
-
-        const record = {
-
-            id: editId
-                ? parseInt(editId)
-                : Date.now(),
-
-            deporte,
-
-            monto,
-
-            descripcion
-
-        };
-
-
-        if (editId) {
-
-            dbDeportes =
-                dbDeportes.map(
-                    i =>
-                        i.id === record.id
-                            ? record
-                            : i
-                );
-
-
-            document.getElementById(
-                'deporte-id'
-            ).value = "";
-
-
-            document.getElementById(
-                'btn-save-deporte'
-            ).textContent =
-                "Guardar Deporte";
-
-        } else {
-
-            dbDeportes.push(record);
-
-        }
-
-
-        localStorage.setItem(
-            'apex_deportes',
-            JSON.stringify(dbDeportes)
-        );
-
-
-        try {
-
-            await window.firebaseAddDoc(
-
-                window.firebaseCollection(
-                    window.firebaseDB,
-                    "deportes"
-                ),
-
-                record
-
-            );
-
-
-            console.log(
-                "Deporte guardado en Firebase."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al guardar deporte:",
-                error
-            );
-
-
-            alert(
-                "El deporte se guardó en la página, pero NO en Firebase."
-            );
-
-
-            return;
-
-        }
-
-
-        resetDeporteForm();
-
-        renderDeportes();
-
-        updateAsignacionSelectors();
-
-    }
-
-
-    function resetDeporteForm() {
-
-        document.getElementById(
-            'deporte-id'
-        ).value = "";
-
-
-        document.getElementById(
-            'nombre-deporte'
-        ).value = "";
-
-
-        document.getElementById(
-            'monto-deporte'
-        ).value = "";
-
-
-        document.getElementById(
-            'descripcion-deporte'
-        ).value = "";
-
-
-        document
-            .querySelectorAll('.sport-card')
-            .forEach(c =>
-                c.classList.remove('selected')
-            );
-
-    }
-
-
-    function renderDeportes() {
-
-        const tbody =
-            document.getElementById(
-                'table-deportes-body'
-            );
-
-
-        tbody.innerHTML =
-            dbDeportes.length === 0
-                ? `<tr>
-                    <td colspan="4"
-                        style="text-align:center; color:var(--text-muted);">
-                        Sin registros.
-                    </td>
-                   </tr>`
-                : '';
-
-
-        dbDeportes.forEach(item => {
-
-            tbody.innerHTML += `
-
-                <tr>
-
-                    <td>
-                        <strong>${item.deporte}</strong>
-                    </td>
-
-                    <td style="color:var(--success); font-weight:700;">
-                        $${Number(item.monto).toFixed(2)}
-                    </td>
-
-                    <td>
-                        ${item.descripcion}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="btn-edit"
-                            onclick="editDeporte(${item.id})"
-                        >
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button
-                            class="btn-delete"
-                            onclick="deleteDeporte(${item.id})"
-                        >
-                            <i class="fas fa-trash"></i>
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-    }
-
-
-    function editDeporte(id) {
-
-        const item =
-            dbDeportes.find(
-                i => i.id === id
-            );
-
-
-        if (!item) return;
-
-
-        document.getElementById(
-            'deporte-id'
-        ).value = item.id;
-
-
-        document.getElementById(
-            'nombre-deporte'
-        ).value = item.deporte;
-
-
-        document.getElementById(
-            'monto-deporte'
-        ).value = item.monto;
-
-
-        document.getElementById(
-            'descripcion-deporte'
-        ).value = item.descripcion;
-
-
-        document.getElementById(
-            'btn-save-deporte'
-        ).textContent =
-            "Actualizar Deporte";
-
-
-        window.scrollTo(0, 0);
-
-    }
-
-
-    function deleteDeporte(id) {
-
-        if (confirm("¿Eliminar deporte?")) {
-
-            dbDeportes =
-                dbDeportes.filter(
-                    i => i.id !== id
-                );
-
-
-            localStorage.setItem(
-                'apex_deportes',
-                JSON.stringify(dbDeportes)
-            );
-
-
-            renderDeportes();
-
-            updateAsignacionSelectors();
-
-        }
-
-    }
-
-
-    /* =========================
-       ENTRENADORES
-    ========================= */
-
-    async function saveEntrenador() {
-
-        const editId =
-            document.getElementById(
-                'entrenador-id'
-            ).value;
-
-
-        const nombre =
-            document.getElementById(
-                'entrenador-nombre'
-            ).value.trim();
-
-
-        const apellido =
-            document.getElementById(
-                'entrenador-apellido'
-            ).value.trim();
-
-
-        const telefono =
-            document.getElementById(
-                'entrenador-telefono'
-            ).value.trim();
-
-
-        const descripcion =
-            document.getElementById(
-                'entrenador-descripcion'
-            ).value.trim();
-
-
-        if (
-            !nombre ||
-            !apellido ||
-            !telefono ||
-            !descripcion
-        ) {
-
-            return alert(
-                "Complete todos los campos del entrenador."
-            );
-
-        }
-
-
-        const record = {
-
-            id: editId
-                ? parseInt(editId)
-                : Math.floor(
-                    1000 +
-                    Math.random() * 9000
-                ),
-
-            nombre,
-
-            apellido,
-
-            telefono,
-
-            descripcion
-
-        };
-
-
-        if (editId) {
-
-            dbEntrenadores =
-                dbEntrenadores.map(
-                    i =>
-                        i.id === record.id
-                            ? record
-                            : i
-                );
-
-
-            document.getElementById(
-                'entrenador-id'
-            ).value = "";
-
-
-            document.getElementById(
-                'btn-save-entrenador'
-            ).textContent =
-                "Guardar Entrenador";
-
-        } else {
-
-            dbEntrenadores.push(record);
-
-        }
-
-
-        localStorage.setItem(
-            'apex_entrenadores',
-            JSON.stringify(dbEntrenadores)
-        );
-
-
-        try {
-
-            await window.firebaseAddDoc(
-
-                window.firebaseCollection(
-                    window.firebaseDB,
-                    "entrenadores"
-                ),
-
-                record
-
-            );
-
-
-            console.log(
-                "Entrenador guardado en Firebase."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al guardar entrenador:",
-                error
-            );
-
-
-            alert(
-                "El entrenador se guardó en la página, pero NO en Firebase."
-            );
-
-
-            return;
-
-        }
-
-
-        resetEntrenadorForm();
-
-        renderEntrenadores();
-
-        updateAsignacionSelectors();
-
-    }
-
-
-    function resetEntrenadorForm() {
-
-        document.getElementById(
-            'entrenador-id'
-        ).value = "";
-
-
-        document.getElementById(
-            'entrenador-nombre'
-        ).value = "";
-
-
-        document.getElementById(
-            'entrenador-apellido'
-        ).value = "";
-
-
-        document.getElementById(
-            'entrenador-telefono'
-        ).value = "";
-
-
-        document.getElementById(
-            'entrenador-descripcion'
-        ).value = "";
-
-    }
-
-
-    function renderEntrenadores() {
-
-        const tbody =
-            document.getElementById(
-                'table-entrenadores-body'
-            );
-
-
-        tbody.innerHTML =
-            dbEntrenadores.length === 0
-                ? `<tr>
-                    <td colspan="4"
-                        style="text-align:center; color:var(--text-muted);">
-                        Sin registros.
-                    </td>
-                   </tr>`
-                : '';
-
-
-        dbEntrenadores.forEach(item => {
-
-            tbody.innerHTML += `
-
-                <tr>
-
-                    <td>
-                        <strong>
-                            ${item.nombre}
-                            ${item.apellido}
-                        </strong>
-                    </td>
-
-                    <td>
-                        ${item.telefono}
-                    </td>
-
-                    <td>
-                        ${item.descripcion}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="btn-edit"
-                            onclick="editEntrenador(${item.id})"
-                        >
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button
-                            class="btn-delete"
-                            onclick="deleteEntrenador(${item.id})"
-                        >
-                            <i class="fas fa-trash"></i>
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-    }
-
-
-    function editEntrenador(id) {
-
-        const item =
-            dbEntrenadores.find(
-                i => i.id === id
-            );
-
-
-        if (!item) return;
-
-
-        document.getElementById(
-            'entrenador-id'
-        ).value = item.id;
-
-
-        document.getElementById(
-            'entrenador-nombre'
-        ).value = item.nombre;
-
-
-        document.getElementById(
-            'entrenador-apellido'
-        ).value = item.apellido;
-
-
-        document.getElementById(
-            'entrenador-telefono'
-        ).value = item.telefono;
-
-
-        document.getElementById(
-            'entrenador-descripcion'
-        ).value = item.descripcion;
-
-
-        document.getElementById(
-            'btn-save-entrenador'
-        ).textContent =
-            "Actualizar Entrenador";
-
-
-        window.scrollTo(0, 0);
-
-    }
-
-
-    function deleteEntrenador(id) {
-
-        if (confirm("¿Eliminar entrenador?")) {
-
-            dbEntrenadores =
-                dbEntrenadores.filter(
-                    i => i.id !== id
-                );
-
-
-            localStorage.setItem(
-                'apex_entrenadores',
-                JSON.stringify(dbEntrenadores)
-            );
-
-
-            renderEntrenadores();
-
-            updateAsignacionSelectors();
-
-        }
-
-    }
-
-
-    /* =========================
-       ASIGNACIONES
-    ========================= */
-
-    function updateAsignacionSelectors() {
-
-        const sel =
-            document.getElementById(
-                'select-entrenador'
-            );
-
-
-        sel.innerHTML =
-            `<option value="">
-                -- Seleccione Entrenador --
-            </option>`;
-
-
-        dbEntrenadores.forEach(e => {
-
-            sel.innerHTML += `
-
-                <option value="${e.id}">
-                    ${e.nombre} ${e.apellido}
-                </option>
-
-            `;
-
-        });
-
-
-        const cont =
-            document.getElementById(
-                'deportes-checkbox-container'
-            );
-
-
-        cont.innerHTML = "";
-
-
-        variosDeportesFijos.forEach(
-            (dep, idx) => {
-
-                cont.innerHTML += `
-
-                    <label class="checkbox-item">
-
-                        <input
-                            type="checkbox"
-                            name="deporte-check"
-                            value="${dep}"
-                            data-deporte-id="${700 + idx}"
-                        >
-
-                        <span>
-                            ${dep}
-                        </span>
-
-                    </label>
-
-                `;
-
-            }
-        );
-
-    }
-
-
-    async function saveAsignacion() {
-
-        const editId =
-            document.getElementById(
-                'asignacion-id'
-            ).value;
-
-
-        const entrenadorId =
-            document.getElementById(
-                'select-entrenador'
-            ).value;
-
-
-        const checks =
-            document.querySelectorAll(
-                'input[name="deporte-check"]:checked'
-            );
-
-
-        let deportes = [];
-
-
-        checks.forEach(c => {
-
-            deportes.push({
-
-                nombre: c.value,
-
-                deporteId:
-                    parseInt(
-                        c.getAttribute(
-                            'data-deporte-id'
-                        )
-                    )
-
-            });
-
-        });
-
-
-        if (
-            !entrenadorId ||
-            deportes.length === 0
-        ) {
-
-            return alert(
-                "Seleccione entrenador y al menos un deporte."
-            );
-
-        }
-
-
-        const record = {
-
-            id: editId
-                ? parseInt(editId)
-                : Date.now(),
-
-            entrenadorId:
-                parseInt(entrenadorId),
-
-            deportes
-
-        };
-
-
-        if (editId) {
-
-            dbAsignaciones =
-                dbAsignaciones.map(
-                    i =>
-                        i.id === record.id
-                            ? record
-                            : i
-                );
-
-
-            document.getElementById(
-                'asignacion-id'
-            ).value = "";
-
-
-            document.getElementById(
-                'btn-save-asignacion'
-            ).textContent =
-                "Guardar Asignación";
-
-        } else {
-
-            dbAsignaciones.push(record);
-
-        }
-
-
-        localStorage.setItem(
-            'apex_asignaciones',
-            JSON.stringify(dbAsignaciones)
-        );
-
-
-        try {
-
-            await window.firebaseAddDoc(
-
-                window.firebaseCollection(
-                    window.firebaseDB,
-                    "asignaciones"
-                ),
-
-                record
-
-            );
-
-
-            console.log(
-                "Asignación guardada en Firebase."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al guardar asignación:",
-                error
-            );
-
-
-            alert(
-                "La asignación se guardó en la página, pero NO en Firebase."
-            );
-
-
-            return;
-
-        }
-
-
-        resetAsignacionForm();
-
-        renderAsignaciones();
-
-    }
-
-
-    function resetAsignacionForm() {
-
-        document.getElementById(
-            'asignacion-id'
-        ).value = "";
-
-
-        document.getElementById(
-            'select-entrenador'
-        ).value = "";
-
-
-        document.getElementById(
-            'toggle-deportes-select'
-        ).value = "";
-
-
-        document.getElementById(
-            'sports-container-box'
-        ).style.display = 'none';
-
-
-        document
-            .querySelectorAll(
-                'input[name="deporte-check"]'
-            )
-            .forEach(
-                c => c.checked = false
-            );
-
-    }
-
-
-    function renderAsignaciones() {
-
-        const tbody =
-            document.getElementById(
-                'table-asignaciones-body'
-            );
-
-
-        tbody.innerHTML =
-            dbAsignaciones.length === 0
-                ? `<tr>
-                    <td colspan="3"
-                        style="text-align:center; color:var(--text-muted);">
-                        Sin registros.
-                    </td>
-                   </tr>`
-                : '';
-
-
-        dbAsignaciones.forEach(item => {
-
-            const ent =
-                dbEntrenadores.find(
-                    e =>
-                        e.id === item.entrenadorId
-                );
-
-
-            const nombreEnt =
-                ent
-                    ? `${ent.nombre} ${ent.apellido}`
-                    : 'Desconocido';
-
-
-            const depNames =
-                item.deportes
-                    .map(d => d.nombre)
-                    .join(', ');
-
-
-            tbody.innerHTML += `
-
-                <tr>
-
-                    <td>
-                        <strong>
-                            ${nombreEnt}
-                        </strong>
-                    </td>
-
-                    <td>
-                        ${depNames}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="btn-edit"
-                            onclick="editAsignacion(${item.id})"
-                        >
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button
-                            class="btn-delete"
-                            onclick="deleteAsignacion(${item.id})"
-                        >
-                            <i class="fas fa-trash"></i>
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-    }
-
-
-    function editAsignacion(id) {
-
-        const item =
-            dbAsignaciones.find(
-                i => i.id === id
-            );
-
-
-        if (!item) return;
-
-
-        document.getElementById(
-            'asignacion-id'
-        ).value = item.id;
-
-
-        document.getElementById(
-            'select-entrenador'
-        ).value = item.entrenadorId;
-
-
-        document.getElementById(
-            'toggle-deportes-select'
-        ).value = 'mostrar';
-
-
-        document.getElementById(
-            'sports-container-box'
-        ).style.display = 'block';
-
-
-        const names =
-            item.deportes.map(
-                d => d.nombre
-            );
-
-
-        document
-            .querySelectorAll(
-                'input[name="deporte-check"]'
-            )
-            .forEach(
-                c =>
-                    c.checked =
-                        names.includes(c.value)
-            );
-
-
-        document.getElementById(
-            'btn-save-asignacion'
-        ).textContent =
-            "Actualizar Asignación";
-
-
-        window.scrollTo(0, 0);
-
-    }
-
-
-    function deleteAsignacion(id) {
-
-        if (confirm("¿Eliminar asignación?")) {
-
-            dbAsignaciones =
-                dbAsignaciones.filter(
-                    i => i.id !== id
-                );
-
-
-            localStorage.setItem(
-                'apex_asignaciones',
-                JSON.stringify(dbAsignaciones)
-            );
-
-
-            renderAsignaciones();
-
-        }
-
-    }
-
-
-    /* =========================
-       ATLETAS
-    ========================= */
-
-    function updateAtletaDeportesSelectors() {
-
-        const cont =
-            document.getElementById(
-                'atleta-deportes-checkbox-container'
-            );
-
-
-        cont.innerHTML = "";
-
-
-        variosDeportesFijos.forEach(
-            (dep, idx) => {
-
-                cont.innerHTML += `
-
-                    <label class="checkbox-item">
-
-                        <input
-                            type="checkbox"
-                            name="atleta-deporte-check"
-                            value="${dep}"
-                            data-deporte-id="${900 + idx}"
-                        >
-
-                        <span>
-                            ${dep}
-                        </span>
-
-                    </label>
-
-                `;
-
-            }
-        );
-
-    }
-
-
-    async function saveAtleta() {
-
-        const editId =
-            document.getElementById(
-                'atleta-id-hidden'
-            ).value;
-
-
-        const cedula =
-            parseInt(
-                document.getElementById(
-                    'atleta-cedula'
-                ).value
-            );
-
-
-        const nombre =
-            document.getElementById(
-                'atleta-nombre'
-            ).value.trim();
-
-
-        const apellido =
-            document.getElementById(
-                'atleta-apellido'
-            ).value.trim();
-
-
-        const telefono =
-            parseInt(
-                document.getElementById(
-                    'atleta-telefono'
-                ).value
-            );
-
-
-        const checks =
-            document.querySelectorAll(
-                'input[name="atleta-deporte-check"]:checked'
-            );
-
-
-        let deportes = [];
-
-
-        checks.forEach(c =>
-            deportes.push(c.value)
-        );
-
-
-        if (
-            isNaN(cedula) ||
-            !nombre ||
-            !apellido ||
-            isNaN(telefono) ||
-            deportes.length === 0
-        ) {
-
-            alert(
-                "Complete todos los campos de atleta y seleccione al menos un deporte."
-            );
-
-            return;
-
-        }
-
-
-        const record = {
-
-            id: editId
-                ? parseInt(editId)
-                : Date.now(),
-
-            cedula,
-
-            nombre,
-
-            apellido,
-
-            telefono,
-
-            deportes
-
-        };
-
-
-        if (editId) {
-
-            dbAtletas =
-                dbAtletas.map(
-                    i =>
-                        i.id === record.id
-                            ? record
-                            : i
-                );
-
-
-            document.getElementById(
-                'atleta-id-hidden'
-            ).value = "";
-
-
-            document.getElementById(
-                'btn-save-atleta'
-            ).textContent =
-                "Guardar Atleta";
-
-        } else {
-
-            dbAtletas.push(record);
-
-        }
-
-
-        localStorage.setItem(
-            'apex_atletas',
-            JSON.stringify(dbAtletas)
-        );
-
-
-        try {
-
-            await window.firebaseAddDoc(
-
-                window.firebaseCollection(
-                    window.firebaseDB,
-                    "atletas"
-                ),
-
-                record
-
-            );
-
-
-            console.log(
-                "Atleta guardado en Firebase."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Error al guardar atleta:",
-                error
-            );
-
-
-            alert(
-                "El atleta se guardó en la página, pero NO en Firebase."
-            );
-
-
-            return;
-
-        }
-
-
-        resetAtletaForm();
-
-        renderAtletas();
-
-        updatePagoAtletasSelector();
-
-    }
-
-
-    function resetAtletaForm() {
-
-        document.getElementById(
-            'atleta-id-hidden'
-        ).value = "";
-
-
-        document.getElementById(
-            'atleta-cedula'
-        ).value = "";
-
-
-        document.get
+localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
+
+try {
+await window.firebaseAddDoc(
+window.firebaseCollection(window.firebaseDB, "entrenadores"),
+record
+);
+
+console.log("✅ Entrenador guardado en Firebase");
+
+} catch (error) {
+console.error("❌ Error al guardar entrenador en Firebase:", error);
+alert("El entrenador se guardó en la página, pero NO en Firebase.");
+return;
+}
+
+resetEntrenadorForm();
+renderEntrenadores();
+updateAsignacionSelectors();
+
+}  
+
+    function resetEntrenadorForm() {  
+        document.getElementById('entrenador-id').value = "";  
+        document.getElementById('entrenador-nombre').value = "";  
+        document.getElementById('entrenador-apellido').value = "";  
+        document.getElementById('entrenador-telefono').value = "";  
+        document.getElementById('entrenador-descripcion').value = "";  
+    }  
+
+    function renderEntrenadores() {  
+        const tbody = document.getElementById('table-entrenadores-body');  
+        tbody.innerHTML = dbEntrenadores.length === 0 ? `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';  
+        dbEntrenadores.forEach(item => {  
+            tbody.innerHTML += `  
+                <tr>  
+                    <td><strong>${item.nombre} ${item.apellido}</strong></td>  
+                    <td>${item.telefono}</td>  
+                    <td>${item.descripcion}</td>  
+                    <td>  
+                        <button class="btn-edit" onclick="editEntrenador(${item.id})"><i class="fas fa-edit"></i></button>  
+                        <button class="btn-delete" onclick="deleteEntrenador(${item.id})"><i class="fas fa-trash"></i></button>  
+                    </td>  
+                </tr>  
+            `;  
+        });  
+    }  
+
+    function editEntrenador(id) {  
+        const item = dbEntrenadores.find(i => i.id === id);  
+        if(!item) return;  
+        document.getElementById('entrenador-id').value = item.id;  
+        document.getElementById('entrenador-nombre').value = item.nombre;  
+        document.getElementById('entrenador-apellido').value = item.apellido;  
+        document.getElementById('entrenador-telefono').value = item.telefono;  
+        document.getElementById('entrenador-descripcion').value = item.descripcion;  
+        document.getElementById('btn-save-entrenador').textContent = "Actualizar Entrenador";  
+        window.scrollTo(0, 0);  
+    }  
+
+    function deleteEntrenador(id) {  
+        if(confirm("¿Eliminar entrenador?")) {  
+            dbEntrenadores = dbEntrenadores.filter(i => i.id !== id);  
+            localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));  
+            renderEntrenadores();  
+            updateAsignacionSelectors();  
+        }  
+    }  
+
+    function updateAsignacionSelectors() {  
+        const sel = document.getElementById('select-entrenador');  
+        sel.innerHTML = `<option value="">-- Seleccione Entrenador --</option>`;  
+        dbEntrenadores.forEach(e => sel.innerHTML += `<option value="${e.id}">${e.nombre} ${e.apellido}</option>`);  
+
+        const cont = document.getElementById('deportes-checkbox-container');  
+        cont.innerHTML = "";  
+        variosDeportesFijos.forEach((dep, idx) => {  
+            cont.innerHTML += `  
+                <label class="checkbox-item">  
+                    <input type="checkbox" name="deporte-check" value="${dep}" data-deporte-id="${700+idx}">  
+                    <span>${dep}</span>  
+                </label>  
+            `;  
+        });  
+    }  
+
+    async function saveAsignacion() {  
+        const editId = document.getElementById('asignacion-id').value;  
+        const entrenadorId = document.getElementById('select-entrenador').value;  
+        const checks = document.querySelectorAll('input[name="deporte-check"]:checked');  
+          
+        let deportes = [];  
+        checks.forEach(c => deportes.push({ nombre: c.value, deporteId: parseInt(c.getAttribute('data-deporte-id')) }));  
+
+        if(!entrenadorId || deportes.length === 0) return alert("Seleccione entrenador y al menos un deporte.");  
+
+        const record = { id: editId ? parseInt(editId) : Date.now(), entrenadorId: parseInt(entrenadorId), deportes };  
+        if(editId) {  
+            dbAsignaciones = dbAsignaciones.map(i => i.id === record.id ? record : i);  
+            document.getElementById('asignacion-id').value = "";  
+            document.getElementById('btn-save-asignacion').textContent = "Guardar Asignación";  
+        } else {  
+            dbAsignaciones.push(record);  
+        }  
+
+       localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
+
+try {
+await window.firebaseAddDoc(
+window.firebaseCollection(window.firebaseDB, "asignaciones"),
+record
+);
+
+console.log("✅ Asignación guardada en Firebase");
+
+} catch (error) {
+console.error("❌ Error al guardar asignación en Firebase:", error);
+alert("La asignación se guardó en la página, pero NO en Firebase.");
+return;
+}
+
+resetAsignacionForm();
+renderAsignaciones();
+}
+
+function resetAsignacionForm() {  
+        document.getElementById('asignacion-id').value = "";  
+        document.getElementById('select-entrenador').value = "";  
+        document.getElementById('toggle-deportes-select').value = "";  
+        document.getElementById('sports-container-box').style.display = 'none';  
+        document.querySelectorAll('input[name="deporte-check"]').forEach(c => c.checked = false);  
+    }  
+
+    function renderAsignaciones() {  
+        const tbody = document.getElementById('table-asignaciones-body');  
+        tbody.innerHTML = dbAsignaciones.length === 0 ? `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';  
+        dbAsignaciones.forEach(item => {  
+            const ent = dbEntrenadores.find(e => e.id === item.entrenadorId);  
+            const nombreEnt = ent ? `${ent.nombre} ${ent.apellido}` : 'Desconocido';  
+            const depNames = item.deportes.map(d => d.nombre).join(', ');  
+            tbody.innerHTML += `  
+                <tr>  
+                    <td><strong>${nombreEnt}</strong></td>  
+                    <td>${depNames}</td>  
+                    <td>  
+                        <button class="btn-edit" onclick="editAsignacion(${item.id})"><i class="fas fa-edit"></i></button>  
+                        <button class="btn-delete" onclick="deleteAsignacion(${item.id})"><i class="fas fa-trash"></i></button>  
+                    </td>  
+                </tr>  
+            `;  
+        });  
+    }  
+
+    function editAsignacion(id) {  
+        const item = dbAsignaciones.find(i => i.id === id);  
+        if(!item) return;  
+        document.getElementById('asignacion-id').value = item.id;  
+        document.getElementById('select-entrenador').value = item.entrenadorId;  
+        document.getElementById('toggle-deportes-select').value = 'mostrar';  
+        document.getElementById('sports-container-box').style.display = 'block';  
+
+        const names = item.deportes.map(d => d.nombre);  
+        document.querySelectorAll('input[name="deporte-check"]').forEach(c => c.checked = names.includes(c.value));  
+        document.getElementById('btn-save-asignacion').textContent = "Actualizar Asignación";  
+        window.scrollTo(0, 0);  
+    }  
+
+    function deleteAsignacion(id) {  
+        if(confirm("¿Eliminar asignación?")) {  
+            dbAsignaciones = dbAsignaciones.filter(i => i.id !== id);  
+            localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));  
+            renderAsignaciones();  
+        }  
+    }  
+
+    function updateAtletaDeportesSelectors() {  
+        const cont = document.getElementById('atleta-deportes-checkbox-container');  
+        cont.innerHTML = "";  
+        variosDeportesFijos.forEach((dep, idx) => {  
+            cont.innerHTML += `  
+                <label class="checkbox-item">  
+                    <input type="checkbox" name="atleta-deporte-check" value="${dep}" data-deporte-id="${900+idx}">  
+                    <span>${dep}</span>  
+                </label>  
+            `;  
+        });  
+    }  
+
+    async function saveAtleta() {  
+        const editId = document.getElementById('atleta-id-hidden').value;  
+        const cedula = parseInt(document.getElementById('atleta-cedula').value);  
+        const nombre = document.getElementById('atleta-nombre').value.trim();  
+        const apellido = document.getElementById('atleta-apellido').value.trim();  
+        const telefono = parseInt(document.getElementById('atleta-telefono').value);  
+        const checks = document.querySelectorAll('input[name="atleta-deporte-check"]:checked');  
+
+        let deportes = [];  
+        checks.forEach(c => deportes.push(c.value));  
+
+        if(isNaN(cedula) || !nombre || !apellido || isNaN(telefono) || deportes.length === 0) {  
+            alert("Complete todos los campos de atleta y seleccione al menos un deporte.");  
+            return;  
+        }  
+
+        const record = { id: editId ? parseInt(editId) : Date.now(), cedula, nombre, apellido, telefono, deportes };  
+        if(editId) {  
+            dbAtletas = dbAtletas.map(i => i.id === record.id ? record : i);  
+            document.getElementById('atleta-id-hidden').value = "";  
+            document.getElementById('btn-save-atleta').textContent = "Guardar Atleta";  
+        } else {  
+            dbAtletas.push(record);  
+        }  
+
+       localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
+
+try {
+await window.firebaseAddDoc(
+window.firebaseCollection(window.firebaseDB, "atletas"),
+record
+);
+
+console.log("✅ Atleta guardado en Firebase");
+
+} catch (error) {
+console.error("❌ Error al guardar en Firebase:", error);
+alert("El atleta se guardó en la página, pero NO en Firebase. Revisa la consola.");
+return;
+}
+
+resetAtletaForm();
+renderAtletas();
+updatePagoAtletasSelector();
+}
+
+function resetAtletaForm() {  
+        document.getElementById('atleta-id-hidden').value = "";  
+        document.getElementById('atleta-cedula').value = "";  
+        document.getElementById('atleta-nombre').value = "";  
+        document.getElementById('atleta-apellido').value = "";  
+        document.getElementById('atleta-telefono').value = "";  
+        document.getElementById('toggle-atleta-deportes').value = "";  
+        document.getElementById('atleta-sports-container-box').style.display = 'none';  
+        document.querySelectorAll('input[name="atleta-deporte-check"]').forEach(c => c.checked = false);  
+    }  
+
+    function renderAtletas() {  
+        const tbody = document.getElementById('table-atletas-body');  
+        tbody.innerHTML = dbAtletas.length === 0 ? `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';  
+        dbAtletas.forEach(item => {  
+            tbody.innerHTML += `  
+                <tr>  
+                    <td><code>${item.cedula}</code></td>  
+                    <td><strong>${item.nombre} ${item.apellido}</strong></td>  
+                    <td>${item.telefono}</td>  
+                    <td>${item.deportes.join(', ')}</td>  
+                    <td>  
+                        <button class="btn-edit" onclick="editAtleta(${item.id})"><i class="fas fa-edit"></i></button>  
+                        <button class="btn-delete" onclick="deleteAtleta(${item.id})"><i class="fas fa-trash"></i></button>  
+                    </td>  
+                </tr>  
+            `;  
+        });  
+    }  
+
+    function editAtleta(id) {  
+        const item = dbAtletas.find(i => i.id === id);  
+        if(!item) return;  
+        document.getElementById('atleta-id-hidden').value = item.id;  
+        document.getElementById('atleta-cedula').value = item.cedula;  
+        document.getElementById('atleta-nombre').value = item.nombre;  
+        document.getElementById('atleta-apellido').value = item.apellido;  
+        document.getElementById('atleta-telefono').value = item.telefono;  
+        document.getElementById('toggle-atleta-deportes').value = 'mostrar';  
+        document.getElementById('atleta-sports-container-box').style.display = 'block';  
+
+        document.querySelectorAll('input[name="atleta-deporte-check"]').forEach(c => c.checked = item.deportes.includes(c.value));  
+        document.getElementById('btn-save-atleta').textContent = "Actualizar Atleta";  
+        window.scrollTo(0, 0);  
+    }  
+
+    function deleteAtleta(id) {  
+        if(confirm("¿Eliminar atleta?")) {  
+            dbAtletas = dbAtletas.filter(i => i.id !== id);  
+            localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));  
+            renderAtletas();  
+            updatePagoAtletasSelector();  
+        }  
+    }  
+
+    function updatePagoAtletasSelector() {  
+        const sel = document.getElementById('select-atleta-pago');  
+        sel.innerHTML = `<option value="">-- Seleccione un atleta --</option>`;  
+        dbAtletas.forEach(a => sel.innerHTML += `<option value="${a.id}">${a.nombre} ${a.apellido} (Cédula: ${a.cedula})</option>`);  
+    }  
+
+    function onAtletaPagoSelected(atletaId) {  
+        const cont = document.getElementById('pago-deportes-container');  
+        cont.innerHTML = "";  
+        if(!atletaId) {  
+            cont.style.display = 'none';  
+            cont.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>`;  
+            return;  
+        }  
+        const atleta = dbAtletas.find(a => a.id == atletaId);  
+        if(!atleta || !atleta.deportes.length) {  
+            cont.style.display = 'block';  
+            cont.innerHTML = `<span style="color: var(--danger); font-size: 0.85rem;">Este atleta no tiene deportes asignados.</span>`;  
+            return;  
+        }  
+        cont.style.display = 'block';  
+        cont.innerHTML = `<label style="font-size: 0.8rem; margin-bottom: 6px;">Seleccione deporte(s) para este pago:</label>`;  
+        atleta.deportes.forEach(dep => {  
+            cont.innerHTML += `  
+                <label class="checkbox-item">  
+                    <input type="checkbox" name="pago-deporte-check" value="${dep}" checked>  
+                    <span>${dep}</span>  
+                </label>  
+            `;  
+        });  
+    }  
+
+    async function savePago() {  
+        const editId = document.getElementById('pago-id-hidden').value;  
+        const monto = parseFloat(document.getElementById('pago-monto').value);  
+        const metodo = document.getElementById('pago-metodo').value;  
+        const fecha = document.getElementById('pago-fecha').value;  
+        const atletaId = document.getElementById('select-atleta-pago').value;  
+        const checks = document.querySelectorAll('input[name="pago-deporte-check"]:checked');  
+
+        let deportes = [];  
+        checks.forEach(c => deportes.push(c.value));  
+
+        if(isNaN(monto) || !metodo || !fecha || !atletaId || deportes.length === 0) {  
+            alert("Complete todos los campos del pago y seleccione al menos un deporte.");  
+            return;  
+        }  
+
+        const record = { id: editId ? parseInt(editId) : Date.now(), monto, metodo, fecha, atletaId: parseInt(atletaId), deportes };  
+        if(editId) {  
+            dbPagos = dbPagos.map(i => i.id === record.id ? record : i);  
+            document.getElementById('pago-id-hidden').value = "";  
+            document.getElementById('btn-save-pago').textContent = "Guardar Pago";  
+        } else {  
+            dbPagos.push(record);  
+        }  
+
+       localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
+
+try {
+await window.firebaseAddDoc(
+window.firebaseCollection(window.firebaseDB, "pagos"),
+record
+);
+
+console.log("✅ Pago guardado en Firebase");
+
+} catch (error) {
+console.error("❌ Error al guardar pago en Firebase:", error);
+alert("El pago se guardó en la página, pero NO en Firebase.");
+return;
+}
+
+resetPagoForm();
+renderPagos();
+}
+
+function resetPagoForm() {  
+        document.getElementById('pago-id-hidden').value = "";  
+        document.getElementById('pago-monto').value = "";  
+        document.getElementById('pago-metodo').value = "";  
+        document.getElementById('pago-fecha').value = "";  
+        document.getElementById('select-atleta-pago').value = "";  
+        const cont = document.getElementById('pago-deportes-container');  
+        cont.style.display = 'none';  
+        cont.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>`;  
+    }  
+
+    function toggleSubRow(atletaId) {  
+        const subRow = document.getElementById(`subrow-${atletaId}`);  
+        const icon = document.getElementById(`icon-${atletaId}`);  
+        if (subRow.style.display === 'table-row') {  
+            subRow.style.display = 'none';  
+            icon.className = 'fas fa-chevron-right';  
+        } else {  
+            subRow.style.display = 'table-row';  
+            icon.className = 'fas fa-chevron-down';  
+        }  
+    }  
+
+    function renderPagos() {  
+        const tbody = document.getElementById('table-pagos-body');  
+        tbody.innerHTML = dbPagos.length === 0 ? `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';  
+          
+        const atletasConPagos = [...new Set(dbPagos.map(p => p.atletaId))];  
+
+        atletasConPagos.forEach(atletaId => {  
+            const pagosDelAtleta = dbPagos.filter(p => p.atletaId === atletaId);  
+            const ultimoPago = pagosDelAtleta[pagosDelAtleta.length - 1];  
+            const atleta = dbAtletas.find(a => a.id === atletaId);  
+            const nombreAtleta = atleta ? `${atleta.nombre} ${atleta.apellido}` : 'Desconocido';  
+
+            tbody.innerHTML += `  
+                <tr>  
+                    <td style="color: var(--success); font-weight:700;">$${ultimoPago.monto.toFixed(2)}</td>  
+                    <td>${ultimoPago.metodo}</td>  
+                    <td>${ultimoPago.fecha}</td>  
+                    <td><strong>${nombreAtleta}</strong></td>  
+                    <td>${ultimoPago.deportes.join(', ')}</td>  
+                    <td>  
+                        <button class="toggle-row-btn" onclick="toggleSubRow(${atletaId})">  
+                            <i id="icon-${atletaId}" class="fas fa-chevron-right"></i> Ver (${pagosDelAtleta.length}) pagos  
+                        </button>  
+                    </td>  
+                    <td>  
+                        <button class="btn-edit" onclick="editPago(${ultimoPago.id})"><i class="fas fa-edit"></i></button>  
+                        <button class="btn-delete" onclick="deletePago(${ultimoPago.id})"><i class="fas fa-trash"></i></button>  
+                    </td>  
+                </tr>  
+            `;  
+
+            let subHtml = `<tr id="subrow-${atletaId}" class="sub-row"><td colspan="7" style="padding: 15px;">`;  
+            subHtml += `<p style="margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; color: var(--accent);">Historial completo de pagos de ${nombreAtleta}:</p>  
+            <table class="sub-table">  
+                <thead>  
+                    <tr style="font-size: 0.75rem;">  
+                        <th>Monto</th>  
+                        <th>Método</th>  
+                        <th>Fecha</th>  
+                        <th>Deportes</th>  
+                    </tr>  
+                </thead>  
+                <tbody>`;  
+            pagosDelAtleta.forEach(p => {  
+                subHtml += `<tr>  
+                    <td style="color: var(--success); font-weight:600;">$${p.monto.toFixed(2)}</td>  
+                    <td>${p.metodo}</td>  
+                    <td>${p.fecha}</td>  
+                    <td>${p.deportes.join(', ')}</td>  
+                </tr>`;  
+            });  
+            subHtml += `</tbody></table></td></tr>`;  
+            tbody.innerHTML += subHtml;  
+        });  
+    }  
+
+    function editPago(id) {  
+        const item = dbPagos.find(i => i.id === id);  
+        if(!item) return;  
+        document.getElementById('pago-id-hidden').value = item.id;  
+        document.getElementById('pago-monto').value = item.monto;  
+        document.getElementById('pago-metodo').value = item.metodo;  
+        document.getElementById('pago-fecha').value = item.fecha;  
+        document.getElementById('select-atleta-pago').value = item.atletaId;  
+
+        onAtletaPagoSelected(item.atletaId);  
+        setTimeout(() => {  
+            document.querySelectorAll('input[name="pago-deporte-check"]').forEach(c => {  
+                c.checked = item.deportes.includes(c.value);  
+            });  
+        }, 50);  
+
+        document.getElementById('btn-save-pago').textContent = "Actualizar Pago";  
+        window.scrollTo(0, 0);  
+    }  
+
+    function deletePago(id) {  
+        if(confirm("¿Eliminar pago?")) {  
+            dbPagos = dbPagos.filter(i => i.id !== id);  
+            localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));  
+            renderPagos();  
+        }  
+    }  
+
+    initDashboard();  
+</script>
+
+</body>  
+</html>
