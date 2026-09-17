@@ -892,16 +892,7 @@ renderAsignaciones();
                 `;
             });
         }
-async function guardarAdministrador() {
-    const nombre = document.getElementById("nombre").value;
-    const apellido = document.getElementById("apellido").value;
-
-    await setDoc(doc(db, "administradores", "administrador1"), {
-        nombre: nombre,
-        apellido: apellido
-    });
-}
-        async function saveAtleta() {
+  async function saveAtleta() {
             const editId = document.getElementById('atleta-id-hidden').value;
             const cedula = parseInt(document.getElementById('atleta-cedula').value);
             const nombre = document.getElementById('atleta-nombre').value.trim();
