@@ -1,1368 +1,2688 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Pro | Gestión Deportiva Premium</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    
-</head>
-<body>
-    <div class="container">
-        <div id="login-view" class="view active">
-            <div class="login-logo">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h2>Acceso Administrativo</h2>
-            <p>Ingrese sus credenciales para acceder al sistema</p>
-            <form id="login-form">
-                <input type="text" id="admin-nombre" placeholder="Nombre" required>
-                <input type="text" id="admin-apellido" placeholder="Apellido" required>
-                <button type="submit">Iniciar Sesión </button>
-              
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-             
-            </form>
-        </div>
+<title>Nexus Pro | Gestión Deportiva</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+/* =========================
+   ESTILOS GENERALES
+========================= */
+
+:root{
+    --primary:#69f157;
+    --primary-hover:#4feb4f;
+    --primary-light:rgba(105,241,87,.15);
+    --secondary:#0a140d;
+    --accent:#10b981;
+    --success:#34d399;
+    --danger:#ef4444;
+    --bg:#050b07;
+    --card-bg:rgba(15,28,20,.75);
+    --border:rgba(105,241,87,.2);
+    --text-main:#f0fdf4;
+    --text-muted:#739681;
+    --radius:16px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Plus Jakarta Sans',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text-main);
+    min-height:100vh;
+    padding:30px 20px;
+    background-image:
+    radial-gradient(at 0% 0%,rgba(105,241,87,.12),transparent 50%),
+    radial-gradient(at 100% 100%,rgba(16,185,129,.08),transparent 50%);
+}
+
+.container{
+    width:100%;
+    max-width:1250px;
+    margin:auto;
+}
+
+.view{
+    display:none;
+    background:var(--card-bg);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:0 25px 50px -12px rgba(0,0,0,.7);
+    padding:35px;
+}
+
+.view.active{
+    display:block;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#login-view{
+    max-width:440px;
+    margin:10vh auto;
+    text-align:center;
+}
+
+.login-logo{
+    width:70px;
+    height:70px;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 24px;
+}
+
+.login-logo i{
+    font-size:2rem;
+    color:#050b07;
+}
+
+#login-view h2{
+    margin-bottom:8px;
+}
+
+#login-view p{
+    color:var(--text-muted);
+    margin-bottom:25px;
+}
+
+/* =========================
+   FORMULARIOS
+========================= */
+
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+    font-size:.85rem;
+    color:var(--text-muted);
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:13px 15px;
+    margin:5px 0 10px;
+    background:rgba(10,20,13,.7);
+    border:1px solid var(--border);
+    border-radius:12px;
+    color:var(--text-main);
+    font-size:.95rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px var(--primary-light);
+}
+
+button{
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:#050b07;
+    border:none;
+    padding:13px 20px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:700;
+    width:100%;
+    transition:.25s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    padding-bottom:22px;
+    margin-bottom:22px;
+}
+
+.admin-badge{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.admin-avatar{
+    width:44px;
+    height:44px;
+    background:var(--primary-light);
+    border:1px solid var(--primary);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--primary);
+    font-weight:bold;
+}
+
+.btn-logout{
+    width:auto;
+    background:rgba(239,68,68,.1);
+    color:var(--danger);
+    border:1px solid rgba(239,68,68,.3);
+}
+
+/* =========================
+   MENU
+========================= */
+
+.tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:25px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:12px;
+    overflow-x:auto;
+}
+
+.tab-btn{
+    width:auto;
+    text-decoration:none;
+    background:transparent;
+    color:var(--text-muted);
+    padding:10px 16px;
+    border-radius:10px;
+    white-space:nowrap;
+}
+
+.tab-btn:hover{
+    color:var(--text-main);
+    background:var(--primary-light);
+    transform:none;
+}
+
+.tab-btn.active{
+    background:var(--primary-light);
+    color:var(--primary);
+}
+
+/* =========================
+   SECCIONES
+========================= */
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.card{
+    background:rgba(10,20,13,.5);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.card h3,
+.card h4{
+    margin-bottom:20px;
+}
+
+/* =========================
+   DEPORTES
+========================= */
+
+.sports-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.sport-card{
+    background:rgba(10,20,13,.6);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:15px 8px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.sport-card i{
+    display:block;
+    font-size:1.5rem;
+    margin-bottom:8px;
+    color:var(--text-muted);
+}
+
+.sport-card span{
+    font-size:.75rem;
+    color:var(--text-muted);
+}
+
+.sport-card:hover,
+.sport-card.selected{
+    border-color:var(--primary);
+    background:var(--primary-light);
+}
+
+.sport-card.selected i,
+.sport-card.selected span{
+    color:var(--primary);
+}
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.checkbox-container{
+    display:none;
+    margin-top:10px;
+}
+
+.checkbox-list{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px;
+    max-height:180px;
+    overflow-y:auto;
+}
+
+.checkbox-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    cursor:pointer;
+}
+
+.checkbox-item input{
+    width:18px;
+    height:18px;
+    margin:0;
+    accent-color:var(--primary);
+}
+
+/* =========================
+   TABLAS
+========================= */
+
+.table-container{
+    overflow-x:auto;
+    background:rgba(10,20,13,.6);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:13px 14px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:.88rem;
+}
+
+th{
+    color:var(--text-muted);
+    font-size:.75rem;
+    text-transform:uppercase;
+}
+
+td button{
+    width:auto;
+    padding:8px 12px;
+    margin:2px;
+}
+
+.btn-edit{
+    background:var(--primary);
+}
+
+.btn-delete{
+    background:var(--danger);
+    color:white;
+}
+
+.btn-history{
+    background:#10b981;
+}
+
+.sub-row{
+    display:none;
+}
+
+.sub-table{
+    margin-top:10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px){
+
+    .view{
+        padding:20px;
+    }
+
+    .sports-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .btn-logout{
+        width:100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<div id="login-view" class="view active">
+
+    <div class="login-logo">
+        <i class="fas fa-shield-alt"></i>
     </div>
-    <script>
-        document.getElementById('login-form').onsubmit = (e) => {
-            e.preventDefault();
-            const nom = document.getElementById('admin-nombre').value.trim();
-            const ape = document.getElementById('admin-apellido').value.trim();
-            if(nom && ape) {
-                const fullName = `${nom} ${ape}`;
-                
-                //evitar guardar otro usuario
-                const userAux = localStorage.getItem('apex_admin');
-                if( userAux == null || userAux == undefined)
-                {                             
-                    localStorage.setItem('apex_admin', fullName);                  
-                }
 
-                if(fullName ===userAux ){                    
-                    window.location.href = "deportes.html"; 
-                }               
-            }
-        };
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
- 
-  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deportes | Nexus Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
-    
-</head>
-<body>
-    <div class="container">
-        <div class="view active">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+    <h2>Acceso Administrativo</h2>
+
+    <p>
+        Ingrese sus credenciales para acceder al sistema
+    </p>
+
+    <form id="login-form">
+
+        <input
+            type="text"
+            id="admin-nombre"
+            placeholder="Nombre"
+            required
+        >
+
+        <input
+            type="text"
+            id="admin-apellido"
+            placeholder="Apellido"
+            required
+        >
+
+        <button type="submit">
+            Iniciar Sesión
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================================
+     SISTEMA
+===================================================== -->
+
+<div id="system-view" class="view">
+
+    <!-- ENCABEZADO -->
+
+    <div class="header">
+
+        <div class="admin-badge">
+
+            <div
+                class="admin-avatar"
+                id="admin-initials">
+                AD
             </div>
 
-            <div class="tabs">
-                <a href="../deportes.html" class="tab-btn active"><i class="fas fa-futbol"></i> Deportes</a>
-                <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-                <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-                <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-                <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
-            </div>
-
-            <div class="card">
-                <h4 style="margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fas fa-plus-circle text-primary"></i> Registrar Deporte</h4>
-                <input type="hidden" id="deporte-id">
-                
-               
-                <div class="form-group">
-                    <label>Seleccionar Icono / Plantilla:</label>
-                    <div class="sports-grid" id="sports-options">
-                        <div class="sport-card" id="card-futbol" onclick="selectPresetSport('Fútbol', 'Entrenamiento táctico y físico en cancha de césped.')">
-                            <i class="fas fa-futbol"></i><span>Fútbol</span>
-                        </div>
-                        <div class="sport-card" id="card-basket" onclick="selectPresetSport('Básquet', 'Práctica de lanzamientos, drible y resistencia.')">
-                            <i class="fas fa-basketball-ball"></i><span>Básquet</span>
-                        </div>
-                        <div class="sport-card" id="card-natacion" onclick="selectPresetSport('Natación', 'Clases técnicas de estilos en piscina semi-olímpica.')">
-                            <i class="fas fa-swimmer"></i><span>Natación</span>
-                        </div>
-                        <div class="sport-card" id="card-gym" onclick="selectPresetSport('Gimnasio', 'Musculación, acondicionamiento y pesas libres.')">
-                            <i class="fas fa-dumbbell"></i><span>Gimnasio</span>
-                        </div>
-                    </div>
-                </div>
-  
-                <div class="form-group">
-                    <label for="nombre-deporte">Nombre del Deporte:</label>
-                    <input type="text" id="nombre-deporte" placeholder="Ej. Tenis, Pádel..." required oninput="handleManualSportInput()">
-                </div>
-                <div class="form-group">
-                    <label for="monto-deporte">Monto de Mensualidad ($):</label>
-                    <input type="number" id="monto-deporte" step="0.01" min="0" placeholder="Ej. 30.00" required>
-                </div>
-                <div class="form-group">
-                    <label for="descripcion-deporte">Descripción:</label>
-                    <textarea id="descripcion-deporte" rows="3" placeholder="Detalles de la disciplina..." required></textarea>
-                </div>
             <div>
-                    <button id="btn-save-deporte" type="submit" onclick="guardardeporte()">Guardar deporte</button>
+
+                <h4 id="admin-name">
+                    Administrador
+                </h4>
+
+                <span style="color:var(--success);font-size:.8rem;">
+                    <i class="fas fa-circle" style="font-size:6px;"></i>
+                    Sesión Activa
+                </span>
+
             </div>
 
-            <div class="table-container">
-                <h4 style="margin-bottom: 15px; font-weight: 700;">Deportes Registrados</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Deporte</th>
-                            <th>Monto</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-deportes-body"></tbody>
-                </table>
-            </div>
         </div>
+
+        <button
+            class="btn-logout"
+            onclick="logout()">
+
+            <i class="fas fa-sign-out-alt"></i>
+            Cerrar Sesión
+
+        </button>
+
     </div>
- <script src="script/libreria compartida.js"></script> 
- <script type="module" src="../script/db.js"></script>
- <script src= "script/deportes.js"></script>
-  </html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrenadores | Nexus Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
 
-</head>
-<body>
-    <div class="container">
-        <div class="view active">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
 
-            <div class="tabs">
-                <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-                <a href="../entrenadores.html" class="tab-btn active"><i class="fas fa-user-tie"></i> Entrenadores</a>
-                <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-                <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-                <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
-            </div>
+    <!-- MENU -->
 
-            <div class="card">
-                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-user-plus text-primary"></i> Registrar Entrenador</h4>
-                <input type="hidden" id="entrenador-id">
-                <div class="form-group">
-                    <label for="entrenador-nombre">Nombre:</label>
-                    <input type="text" id="entrenador-nombre" placeholder="Nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="entrenador-apellido">Apellido:</label>
-                    <input type="text" id="entrenador-apellido" placeholder="Apellido" required>
-                </div>
-                <div class="form-group">
-                    <label for="entrenador-telefono">Teléfono:</label>
-                    <input type="tel" id="entrenador-telefono" placeholder="Ej. +591 70000000" required>
-                </div>
-                <div class="form-group">
-                    <label for="entrenador-descripcion">Descripción del Entrenador:</label>
-                    <textarea id="entrenador-descripcion" rows="3" placeholder="Especialidad, experiencia o notas..." required></textarea>
-                </div>
-                <button id="btn-save-entrenador" onclick="guardarEntrenador()">Guardar Entrenador</button>
-            </div>
+    <div class="tabs">
 
-            <div class="table-container">
-                <h4 style="margin-bottom: 15px; font-weight: 700;">Entrenadores Registrados</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre & Apellido</th>
-                            <th>Teléfono</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-entrenadores-body"></tbody>
-                </table>
-            </div>
-        </div>
+        <button
+            class="tab-btn active"
+            onclick="mostrarSeccion('deportes',this)">
+
+            <i class="fas fa-futbol"></i>
+            Deportes
+
+        </button>
+
+        <button
+            class="tab-btn"
+            onclick="mostrarSeccion('entrenadores',this)">
+
+            <i class="fas fa-user-tie"></i>
+            Entrenadores
+
+        </button>
+
+        <button
+            class="tab-btn"
+            onclick="mostrarSeccion('asignaciones',this)">
+
+            <i class="fas fa-link"></i>
+            Asignaciones
+
+        </button>
+
+        <button
+            class="tab-btn"
+            onclick="mostrarSeccion('atletas',this)">
+
+            <i class="fas fa-users"></i>
+            Atletas
+
+        </button>
+
+        <button
+            class="tab-btn"
+            onclick="mostrarSeccion('pagos',this)">
+
+            <i class="fas fa-cash-register"></i>
+            Pagos
+
+        </button>
+
     </div>
-    
-    
-     <script src="script/libreria compartida.js"></script>  
-    <script type="module" src="../script/db.js"></script>
-    <script src="script/entrenadores.js"></script>
-    
+
+
+<!-- =====================================================
+     DEPORTES
+===================================================== -->
+
+<section id="deportes" class="section active">
+
+<div class="card">
+
+<h3>
+<i class="fas fa-plus-circle"></i>
+Registrar Deporte
+</h3>
+
+<input
+type="hidden"
+id="deporte-id"
+>
+
+<div class="form-group">
+
+<label>
+Seleccionar Icono / Plantilla
+</label>
+
+<div class="sports-grid">
+
+<div
+class="sport-card"
+id="card-futbol"
+onclick="seleccionarDeporte('Fútbol','Entrenamiento táctico y físico en cancha de césped.')">
+
+<i class="fas fa-futbol"></i>
+<span>Fútbol</span>
+
+</div>
+
+<div
+class="sport-card"
+id="card-basket"
+onclick="seleccionarDeporte('Básquet','Práctica de lanzamientos, drible y resistencia.')">
+
+<i class="fas fa-basketball-ball"></i>
+<span>Básquet</span>
+
+</div>
+
+<div
+class="sport-card"
+id="card-natacion"
+onclick="seleccionarDeporte('Natación','Clases técnicas de estilos en piscina.')">
+
+<i class="fas fa-swimmer"></i>
+<span>Natación</span>
+
+</div>
+
+<div
+class="sport-card"
+id="card-gym"
+onclick="seleccionarDeporte('Gimnasio','Musculación, acondicionamiento y pesas libres.')">
+
+<i class="fas fa-dumbbell"></i>
+<span>Gimnasio</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Nombre del Deporte</label>
+
+<input
+type="text"
+id="nombre-deporte"
+placeholder="Ej. Tenis, Pádel..."
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Monto de Mensualidad</label>
+
+<input
+type="number"
+id="monto-deporte"
+step="0.01"
+min="0"
+placeholder="Ej. 30.00"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Descripción</label>
+
+<textarea
+id="descripcion-deporte"
+rows="3"
+placeholder="Detalles de la disciplina..."
+></textarea>
+
+</div>
+
+
+<button
+id="btn-save-deporte"
+onclick="guardarDeporte()">
+
+Guardar Deporte
+
+</button>
+
+</div>
+
+
+<div class="table-container">
+
+<h3>Deportes Registrados</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Deporte</th>
+<th>Monto</th>
+<th>Descripción</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla-deportes"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ENTRENADORES
+===================================================== -->
+
+<section id="entrenadores" class="section">
+
+<div class="card">
+
+<h3>
+<i class="fas fa-user-plus"></i>
+Registrar Entrenador
+</h3>
+
+<input
+type="hidden"
+id="entrenador-id"
+>
+
+<div class="form-group">
+
+<label>Nombre</label>
+
+<input
+type="text"
+id="entrenador-nombre"
+placeholder="Nombre"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Apellido</label>
+
+<input
+type="text"
+id="entrenador-apellido"
+placeholder="Apellido"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Teléfono</label>
+
+<input
+type="tel"
+id="entrenador-telefono"
+placeholder="Ej. 70000000"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Descripción</label>
+
+<textarea
+id="entrenador-descripcion"
+rows="3"
+placeholder="Especialidad, experiencia..."
+></textarea>
+
+</div>
+
+
+<button
+id="btn-save-entrenador"
+onclick="guardarEntrenador()">
+
+Guardar Entrenador
+
+</button>
+
+</div>
+
+
+<div class="table-container">
+
+<h3>Entrenadores Registrados</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Nombre</th>
+<th>Teléfono</th>
+<th>Descripción</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla-entrenadores"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ASIGNACIONES
+===================================================== -->
+
+<section id="asignaciones" class="section">
+
+<div class="card">
+
+<h3>
+<i class="fas fa-link"></i>
+Asignar Deportes
+</h3>
+
+<input
+type="hidden"
+id="asignacion-id"
+>
+
+<div class="form-group">
+
+<label>Seleccionar Entrenador</label>
+
+<select id="select-entrenador">
+
+<option value="">
+-- Seleccione Entrenador --
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Seleccione Deportes</label>
+
+<div
+class="checkbox-list"
+id="lista-deportes-asignacion">
+</div>
+
+</div>
+
+
+<button
+onclick="guardarAsignacion()"
+id="btn-save-asignacion">
+
+Guardar Asignación
+
+</button>
+
+</div>
+
+
+<div class="table-container">
+
+<h3>Asignaciones Activas</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Entrenador</th>
+<th>Deportes</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla-asignaciones"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ATLETAS
+===================================================== -->
+
+<section id="atletas" class="section">
+
+<div class="card">
+
+<h3>
+<i class="fas fa-user-graduate"></i>
+Registrar Atleta
+</h3>
+
+<input
+type="hidden"
+id="atleta-id"
+>
+
+<div class="form-group">
+
+<label>Cédula</label>
+
+<input
+type="number"
+id="atleta-cedula"
+placeholder="Ej. 12345678"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Nombre</label>
+
+<input
+type="text"
+id="atleta-nombre"
+placeholder="Nombre"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Apellido</label>
+
+<input
+type="text"
+id="atleta-apellido"
+placeholder="Apellido"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Teléfono</label>
+
+<input
+type="number"
+id="atleta-telefono"
+placeholder="Ej. 70000000"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Deportes del Atleta</label>
+
+<div
+class="checkbox-list"
+id="lista-deportes-atleta">
+</div>
+
+</div>
+
+
+<button
+id="btn-save-atleta"
+onclick="guardarAtleta()">
+
+Guardar Atleta
+
+</button>
+
+</div>
+
+
+<div class="table-container">
+
+<h3>Atletas Registrados</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Cédula</th>
+<th>Nombre</th>
+<th>Teléfono</th>
+<th>Deportes</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla-atletas"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PAGOS
+===================================================== -->
+
+<section id="pagos" class="section">
+
+<div class="card">
+
+<h3>
+<i class="fas fa-wallet"></i>
+Registro de Pagos Deportivos
+</h3>
+
+<input
+type="hidden"
+id="pago-id"
+>
+
+<div class="form-group">
+
+<label>Monto</label>
+
+<input
+type="number"
+id="pago-monto"
+step="0.01"
+min="0"
+placeholder="Ej. 50.00"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Método de Pago</label>
+
+<select id="pago-metodo">
+
+<option value="">
+-- Seleccione método --
+</option>
+
+<option value="Transferencia">
+Transferencia
+</option>
+
+<option value="Tarjeta">
+Tarjeta
+</option>
+
+<option value="Efectivo">
+Efectivo
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Fecha</label>
+
+<input
+type="date"
+id="pago-fecha"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Atleta</label>
+
+<select
+id="select-atleta-pago"
+onchange="cargarDeportesPago()">
+
+<option value="">
+-- Seleccione un atleta --
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Deportes del Atleta</label>
+
+<div
+class="checkbox-list"
+id="lista-deportes-pago">
+</div>
+
+</div>
+
+
+<button
+id="btn-save-pago"
+onclick="guardarPago()">
+
+Guardar Pago
+
+</button>
+
+</div>
+
+
+<div class="table-container">
+
+<h3>Historial de Pagos</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Monto</th>
+<th>Método</th>
+<th>Fecha</th>
+<th>Atleta</th>
+<th>Deportes</th>
+<th>Historial</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla-pagos"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   BASE DE DATOS LOCAL
+===================================================== */
+
+let deportes =
+JSON.parse(localStorage.getItem("apex_deportes")) || [];
+
+let entrenadores =
+JSON.parse(localStorage.getItem("apex_entrenadores")) || [];
+
+let asignaciones =
+JSON.parse(localStorage.getItem("apex_asignaciones")) || [];
+
+let atletas =
+JSON.parse(localStorage.getItem("apex_atletas")) || [];
+
+let pagos =
+JSON.parse(localStorage.getItem("apex_pagos")) || [];
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+document
+.getElementById("login-form")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const nombre =
+    document.getElementById("admin-nombre")
+    .value.trim();
+
+    const apellido =
+    document.getElementById("admin-apellido")
+    .value.trim();
+
+    if(!nombre || !apellido){
+        alert("Complete nombre y apellido.");
+        return;
+    }
+
+    const usuario =
+    nombre + " " + apellido;
+
+    localStorage.setItem(
+        "apex_admin",
+        usuario
+    );
+
+    iniciarSistema();
+
+});
+
+
+function iniciarSistema(){
+
+    const usuario =
+    localStorage.getItem("apex_admin");
+
+    if(!usuario){
+        return;
+    }
+
+    document
+    .getElementById("login-view")
+    .classList.remove("active");
+
+    document
+    .getElementById("system-view")
+    .classList.add("active");
+
+    document
+    .getElementById("admin-name")
+    .textContent = usuario;
+
+    document
+    .getElementById("admin-initials")
+    .textContent =
+    usuario
+    .split(" ")
+    .map(x => x[0])
+    .join("")
+    .substring(0,2)
+    .toUpperCase();
+
+    actualizarTodo();
+}
+
+
+function logout(){
+
+    localStorage.removeItem("apex_admin");
+
+    document
+    .getElementById("system-view")
+    .classList.remove("active");
+
+    document
+    .getElementById("login-view")
+    .classList.add("active");
+
+    document
+    .getElementById("login-form")
+    .reset();
+}
+
+
+/* =====================================================
+   CAMBIAR SECCIÓN
+===================================================== */
+
+function mostrarSeccion(nombre,boton){
+
+    document
+    .querySelectorAll(".section")
+    .forEach(s => s.classList.remove("active"));
+
+    document
+    .getElementById(nombre)
+    .classList.add("active");
+
+    document
+    .querySelectorAll(".tab-btn")
+    .forEach(b => b.classList.remove("active"));
+
+    boton.classList.add("active");
+
+    actualizarTodo();
+}
+
+
+/* =====================================================
+   DEPORTES
+===================================================== */
+
+function seleccionarDeporte(nombre,descripcion){
+
+    document
+    .getElementById("nombre-deporte")
+    .value = nombre;
+
+    document
+    .getElementById("descripcion-deporte")
+    .value = descripcion;
+
+    document
+    .querySelectorAll(".sport-card")
+    .forEach(c => c.classList.remove("selected"));
+
+    const mapa={
+        "Fútbol":"futbol",
+        "Básquet":"basket",
+        "Natación":"natacion",
+        "Gimnasio":"gym"
+    };
+
+    if(mapa[nombre]){
+
+        document
+        .getElementById(
+            "card-" + mapa[nombre]
+        )
+        .classList.add("selected");
+    }
+}
+
+
+function guardarDeporte(){
+
+    const id =
+    document.getElementById("deporte-id")
+    .value;
+
+    const nombre =
+    document.getElementById("nombre-deporte")
+    .value.trim();
+
+    const monto =
+    parseFloat(
+        document.getElementById("monto-deporte")
+        .value
+    );
+
+    const descripcion =
+    document.getElementById("descripcion-deporte")
+    .value.trim();
+
+    if(!nombre || isNaN(monto) || !descripcion){
+
+        alert("Complete todos los campos del deporte.");
+
+        return;
+    }
+
+    const registro={
+        id:id ? Number(id) : Date.now(),
+        deporte:nombre,
+        monto:monto,
+        descripcion:descripcion
+    };
+
+    if(id){
+
+        deportes =
+        deportes.map(d =>
+            d.id === Number(id)
+            ? registro
+            : d
+        );
+
+    }else{
+
+        deportes.push(registro);
+
+    }
+
+    guardarDatos();
+
+    limpiarDeporte();
+
+    mostrarDeportes();
+    actualizarListas();
+}
+
+
+function editarDeporte(id){
+
+    const d =
+    deportes.find(x => x.id === id);
+
+    if(!d) return;
+
+    document.getElementById("deporte-id").value=d.id;
+    document.getElementById("nombre-deporte").value=d.deporte;
+    document.getElementById("monto-deporte").value=d.monto;
+    document.getElementById("descripcion-deporte").value=d.descripcion;
+
+    document.getElementById("btn-save-deporte")
+    .textContent="Actualizar Deporte";
+
+    window.scrollTo(0,0);
+}
+
+
+function eliminarDeporte(id){
+
+    if(!confirm("¿Eliminar este deporte?"))
+    return;
+
+    deportes =
+    deportes.filter(d => d.id !== id);
+
+    guardarDatos();
+
+    mostrarDeportes();
+    actualizarListas();
+}
+
+
+function limpiarDeporte(){
+
+    document.getElementById("deporte-id").value="";
+    document.getElementById("nombre-deporte").value="";
+    document.getElementById("monto-deporte").value="";
+    document.getElementById("descripcion-deporte").value="";
+
+    document
+    .querySelectorAll(".sport-card")
+    .forEach(c => c.classList.remove("selected"));
+
+    document
+    .getElementById("btn-save-deporte")
+    .textContent="Guardar Deporte";
+}
+
+
+function mostrarDeportes(){
+
+    const tbody =
+    document.getElementById("tabla-deportes");
+
+    if(deportes.length === 0){
+
+        tbody.innerHTML=
+        `<tr>
+        <td colspan="4" style="text-align:center">
+        Sin registros.
+        </td>
+        </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML="";
+
+    deportes.forEach(d => {
+
+        tbody.innerHTML += `
+
+        <tr>
+
+        <td>
+        <strong>${d.deporte}</strong>
+        </td>
+
+        <td>
+        $${Number(d.monto).toFixed(2)}
+        </td>
+
+        <td>
+        ${d.descripcion}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-edit"
+        onclick="editarDeporte(${d.id})">
+        <i class="fas fa-edit"></i>
+        </button>
+
+        <button
+        class="btn-delete"
+        onclick="eliminarDeporte(${d.id})">
+        <i class="fas fa-trash"></i>
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+
+/* =====================================================
+   ENTRENADORES
+===================================================== */
+
+function guardarEntrenador(){
+
+    const id =
+    document.getElementById("entrenador-id").value;
+
+    const nombre =
+    document.getElementById("entrenador-nombre")
+    .value.trim();
+
+    const apellido =
+    document.getElementById("entrenador-apellido")
+    .value.trim();
+
+    const telefono =
+    document.getElementById("entrenador-telefono")
+    .value.trim();
+
+    const descripcion =
+    document.getElementById("entrenador-descripcion")
+    .value.trim();
+
+    if(!nombre || !apellido || !telefono || !descripcion){
+
+        alert("Complete todos los campos del entrenador.");
+
+        return;
+    }
+
+    const registro={
+
+        id:id
+        ? Number(id)
+        : Date.now(),
+
+        nombre,
+        apellido,
+        telefono,
+        descripcion
+    };
+
+    if(id){
+
+        entrenadores =
+        entrenadores.map(e =>
+            e.id === Number(id)
+            ? registro
+            : e
+        );
+
+    }else{
+
+        entrenadores.push(registro);
+
+    }
+
+    guardarDatos();
+
+    limpiarEntrenador();
+
+    mostrarEntrenadores();
+    actualizarListas();
+}
+
+
+function editarEntrenador(id){
+
+    const e =
+    entrenadores.find(x => x.id === id);
+
+    if(!e) return;
+
+    document.getElementById("entrenador-id").value=e.id;
+    document.getElementById("entrenador-nombre").value=e.nombre;
+    document.getElementById("entrenador-apellido").value=e.apellido;
+    document.getElementById("entrenador-telefono").value=e.telefono;
+    document.getElementById("entrenador-descripcion").value=e.descripcion;
+
+    document
+    .getElementById("btn-save-entrenador")
+    .textContent="Actualizar Entrenador";
+
+    window.scrollTo(0,0);
+}
+
+
+function eliminarEntrenador(id){
+
+    if(!confirm("¿Eliminar este entrenador?"))
+    return;
+
+    entrenadores =
+    entrenadores.filter(e => e.id !== id);
+
+    asignaciones =
+    asignaciones.filter(a => a.entrenadorId !== id);
+
+    guardarDatos();
+
+    mostrarEntrenadores();
+    mostrarAsignaciones();
+    actualizarListas();
+}
+
+
+function limpiarEntrenador(){
+
+    document.getElementById("entrenador-id").value="";
+    document.getElementById("entrenador-nombre").value="";
+    document.getElementById("entrenador-apellido").value="";
+    document.getElementById("entrenador-telefono").value="";
+    document.getElementById("entrenador-descripcion").value="";
+
+    document
+    .getElementById("btn-save-entrenador")
+    .textContent="Guardar Entrenador";
+}
+
+
+function mostrarEntrenadores(){
+
+    const tbody =
+    document.getElementById("tabla-entrenadores");
+
+    if(entrenadores.length === 0){
+
+        tbody.innerHTML=
+        `<tr>
+        <td colspan="4" style="text-align:center">
+        Sin registros.
+        </td>
+        </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML="";
+
+    entrenadores.forEach(e => {
+
+        tbody.innerHTML += `
+
+        <tr>
+
+        <td>
+        <strong>
+        ${e.nombre} ${e.apellido}
+        </strong>
+        </td>
+
+        <td>
+        ${e.telefono}
+        </td>
+
+        <td>
+        ${e.descripcion}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-edit"
+        onclick="editarEntrenador(${e.id})">
+        <i class="fas fa-edit"></i>
+        </button>
+
+        <button
+        class="btn-delete"
+        onclick="eliminarEntrenador(${e.id})">
+        <i class="fas fa-trash"></i>
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+
+/* =====================================================
+   ASIGNACIONES
+===================================================== */
+
+function actualizarListaAsignaciones(){
+
+    const select =
+    document.getElementById("select-entrenador");
+
+    select.innerHTML=
+    `<option value="">
+    -- Seleccione Entrenador --
+    </option>`;
+
+    entrenadores.forEach(e => {
+
+        select.innerHTML += `
+
+        <option value="${e.id}">
+        ${e.nombre} ${e.apellido}
+        </option>
+
+        `;
+    });
+
+
+    const lista =
+    document.getElementById("lista-deportes-asignacion");
+
+    lista.innerHTML="";
+
+    deportes.forEach(d => {
+
+        lista.innerHTML += `
+
+        <label class="checkbox-item">
+
+        <input
+        type="checkbox"
+        name="deporte-asignacion"
+        value="${d.id}">
+
+        ${d.deporte}
+
+        </label>
+
+        `;
+    });
+}
+
+
+function guardarAsignacion(){
+
+    const id =
+    document.getElementById("asignacion-id").value;
+
+    const entrenadorId =
+    Number(
+        document.getElementById("select-entrenador")
+        .value
+    );
+
+    const checks =
+    document.querySelectorAll(
+        'input[name="deporte-asignacion"]:checked'
+    );
+
+    const deportesSeleccionados =
+    [...checks].map(c => Number(c.value));
+
+    if(
+        !entrenadorId ||
+        deportesSeleccionados.length === 0
+    ){
+
+        alert(
+        "Seleccione un entrenador y al menos un deporte."
+        );
+
+        return;
+    }
+
+    const registro={
+
+        id:id
+        ? Number(id)
+        : Date.now(),
+
+        entrenadorId,
+
+        deportes:deportesSeleccionados
+
+    };
+
+    if(id){
+
+        asignaciones =
+        asignaciones.map(a =>
+            a.id === Number(id)
+            ? registro
+            : a
+        );
+
+    }else{
+
+        asignaciones.push(registro);
+
+    }
+
+    guardarDatos();
+
+    limpiarAsignacion();
+
+    mostrarAsignaciones();
+
+}
+
+
+function editarAsignacion(id){
+
+    const a =
+    asignaciones.find(x => x.id === id);
+
+    if(!a) return;
+
+    document.getElementById("asignacion-id").value=a.id;
+
+    document.getElementById("select-entrenador").value=
+    a.entrenadorId;
+
+    document
+    .querySelectorAll(
+        'input[name="deporte-asignacion"]'
+    )
+    .forEach(c => {
+
+        c.checked =
+        a.deportes.includes(Number(c.value));
+
+    });
+
+    document
+    .getElementById("btn-save-asignacion")
+    .textContent="Actualizar Asignación";
+
+    window.scrollTo(0,0);
+}
+
+
+function eliminarAsignacion(id){
+
+    if(!confirm("¿Eliminar esta asignación?"))
+    return;
+
+    asignaciones =
+    asignaciones.filter(a => a.id !== id);
+
+    guardarDatos();
+
+    mostrarAsignaciones();
+}
+
+
+function limpiarAsignacion(){
+
+    document.getElementById("asignacion-id").value="";
+
+    document.getElementById("select-entrenador").value="";
+
+    document
+    .querySelectorAll(
+        'input[name="deporte-asignacion"]'
+    )
+    .forEach(c => c.checked=false);
+
+    document
+    .getElementById("btn-save-asignacion")
+    .textContent="Guardar Asignación";
+}
+
+
+function mostrarAsignaciones(){
+
+    const tbody =
+    document.getElementById("tabla-asignaciones");
+
+    if(asignaciones.length===0){
+
+        tbody.innerHTML=
+        `<tr>
+        <td colspan="3" style="text-align:center">
+        Sin registros.
+        </td>
+        </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML="";
+
+    asignaciones.forEach(a => {
+
+        const entrenador =
+        entrenadores.find(
+            e => e.id === a.entrenadorId
+        );
+
+        const nombreEntrenador =
+        entrenador
+        ? `${entrenador.nombre} ${entrenador.apellido}`
+        : "Desconocido";
+
+        const nombresDeportes =
+        a.deportes
+        .map(id => {
+
+            const d =
+            deportes.find(x => x.id === id);
+
+            return d ? d.deporte : "Desconocido";
+
+        })
+        .join(", ");
+
+        tbody.innerHTML += `
+
+        <tr>
+
+        <td>
+        <strong>${nombreEntrenador}</strong>
+        </td>
+
+        <td>
+        ${nombresDeportes}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-edit"
+        onclick="editarAsignacion(${a.id})">
+        <i class="fas fa-edit"></i>
+        </button>
+
+        <button
+        class="btn-delete"
+        onclick="eliminarAsignacion(${a.id})">
+        <i class="fas fa-trash"></i>
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+
+/* =====================================================
+   ATLETAS
+===================================================== */
+
+function actualizarListaAtletas(){
+
+    const lista =
+    document.getElementById("lista-deportes-atleta");
+
+    lista.innerHTML="";
+
+    deportes.forEach(d => {
+
+        lista.innerHTML += `
+
+        <label class="checkbox-item">
+
+        <input
+        type="checkbox"
+        name="deporte-atleta"
+        value="${d.id}">
+
+        ${d.deporte}
+
+        </label>
+
+        `;
+    });
+
+
+    const select =
+    document.getElementById("select-atleta-pago");
+
+    select.innerHTML=
+    `<option value="">
+    -- Seleccione un atleta --
+    </option>`;
+
+    atletas.forEach(a => {
+
+        select.innerHTML += `
+
+        <option value="${a.id}">
+        ${a.nombre} ${a.apellido}
+        - C.I. ${a.cedula}
+        </option>
+
+        `;
+    });
+}
+
+
+function guardarAtleta(){
+
+    const id =
+    document.getElementById("atleta-id").value;
+
+    const cedula =
+    document.getElementById("atleta-cedula")
+    .value.trim();
+
+    const nombre =
+    document.getElementById("atleta-nombre")
+    .value.trim();
+
+    const apellido =
+    document.getElementById("atleta-apellido")
+    .value.trim();
+
+    const telefono =
+    document.getElementById("atleta-telefono")
+    .value.trim();
+
+    const checks =
+    document.querySelectorAll(
+        'input[name="deporte-atleta"]:checked'
+    );
+
+    const deportesAtleta =
+    [...checks].map(c => Number(c.value));
+
+    if(
+        !cedula ||
+        !nombre ||
+        !apellido ||
+        !telefono ||
+        deportesAtleta.length===0
+    ){
+
+        alert(
+        "Complete todos los campos y seleccione al menos un deporte."
+        );
+
+        return;
+    }
+
+    const registro={
+
+        id:id
+        ? Number(id)
+        : Date.now(),
+
+        cedula,
+        nombre,
+        apellido,
+        telefono,
+
+        deportes:deportesAtleta
+
+    };
+
+    if(id){
+
+        atletas =
+        atletas.map(a =>
+            a.id === Number(id)
+            ? registro
+            : a
+        );
+
+    }else{
+
+        atletas.push(registro);
+
+    }
+
+    guardarDatos();
+
+    limpiarAtleta();
+
+    mostrarAtletas();
+    actualizarListaAtletas();
+}
+
+
+function editarAtleta(id){
+
+    const a =
+    atletas.find(x => x.id === id);
+
+    if(!a) return;
+
+    document.getElementById("atleta-id").value=a.id;
+    document.getElementById("atleta-cedula").value=a.cedula;
+    document.getElementById("atleta-nombre").value=a.nombre;
+    document.getElementById("atleta-apellido").value=a.apellido;
+    document.getElementById("atleta-telefono").value=a.telefono;
+
+    document
+    .querySelectorAll(
+        'input[name="deporte-atleta"]'
+    )
+    .forEach(c => {
+
+        c.checked =
+        a.deportes.includes(Number(c.value));
+
+    });
+
+    document
+    .getElementById("btn-save-atleta")
+    .textContent="Actualizar Atleta";
+
+    window.scrollTo(0,0);
+}
+
+
+function eliminarAtleta(id){
+
+    if(!confirm("¿Eliminar este atleta?"))
+    return;
+
+    atletas =
+    atletas.filter(a => a.id !== id);
+
+    pagos =
+    pagos.filter(p => p.atletaId !== id);
+
+    guardarDatos();
+
+    mostrarAtletas();
+    actualizarListaAtletas();
+    mostrarPagos();
+}
+
+
+function limpiarAtleta(){
+
+    document.getElementById("atleta-id").value="";
+    document.getElementById("atleta-cedula").value="";
+    document.getElementById("atleta-nombre").value="";
+    document.getElementById("atleta-apellido").value="";
+    document.getElementById("atleta-telefono").value="";
+
+    document
+    .querySelectorAll(
+        'input[name="deporte-atleta"]'
+    )
+    .forEach(c => c.checked=false);
+
+    document
+    .getElementById("btn-save-atleta")
+    .textContent="Guardar Atleta";
+}
+
+
+function mostrarAtletas(){
+
+    const tbody =
+    document.getElementById("tabla-atletas");
+
+    if(atletas.length===0){
+
+        tbody.innerHTML=
+        `<tr>
+        <td colspan="5" style="text-align:center">
+        Sin registros.
+        </td>
+        </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML="";
+
+    atletas.forEach(a => {
+
+        const nombresDeportes =
+        a.deportes.map(id => {
+
+            const d =
+            deportes.find(x => x.id === id);
+
+            return d ? d.deporte : "Desconocido";
+
+        }).join(", ");
+
+        tbody.innerHTML += `
+
+        <tr>
+
+        <td>${a.cedula}</td>
+
+        <td>
+        <strong>
+        ${a.nombre} ${a.apellido}
+        </strong>
+        </td>
+
+        <td>
+        ${a.telefono}
+        </td>
+
+        <td>
+        ${nombresDeportes}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-edit"
+        onclick="editarAtleta(${a.id})">
+        <i class="fas fa-edit"></i>
+        </button>
+
+        <button
+        class="btn-delete"
+        onclick="eliminarAtleta(${a.id})">
+        <i class="fas fa-trash"></i>
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+
+/* =====================================================
+   PAGOS
+===================================================== */
+
+function cargarDeportesPago(){
+
+    const atletaId =
+    Number(
+        document.getElementById("select-atleta-pago")
+        .value
+    );
+
+    const lista =
+    document.getElementById("lista-deportes-pago");
+
+    lista.innerHTML="";
+
+    if(!atletaId)
+    return;
+
+    const atleta =
+    atletas.find(a => a.id === atletaId);
+
+    if(!atleta)
+    return;
+
+    atleta.deportes.forEach(id => {
+
+        const deporte =
+        deportes.find(d => d.id === id);
+
+        if(!deporte) return;
+
+        lista.innerHTML += `
+
+        <label class="checkbox-item">
+
+        <input
+        type="checkbox"
+        name="deporte-pago"
+        value="${deporte.id}"
+        checked>
+
+        ${deporte.deporte}
+
+        </label>
+
+        `;
+    });
+}
+
+
+function guardarPago(){
+
+    const id =
+    document.getElementById("pago-id").value;
+
+    const monto =
+    parseFloat(
+        document.getElementById("pago-monto").value
+    );
+
+    const metodo =
+    document.getElementById("pago-metodo").value;
+
+    const fecha =
+    document.getElementById("pago-fecha").value;
+
+    const atletaId =
+    Number(
+        document.getElementById("select-atleta-pago").value
+    );
+
+    const checks =
+    document.querySelectorAll(
+        'input[name="deporte-pago"]:checked'
+    );
+
+    const deportesPago =
+    [...checks].map(c => Number(c.value));
+
+    if(
+        isNaN(monto) ||
+        !metodo ||
+        !fecha ||
+        !atletaId ||
+        deportesPago.length===0
+    ){
+
+        alert(
+        "Complete todos los campos del pago."
+        );
+
+        return;
+    }
+
+    const registro={
+
+        id:id
+        ? Number(id)
+        : Date.now(),
+
+        monto,
+        metodo,
+        fecha,
+        atletaId,
+
+        deportes:deportesPago
+
+    };
+
+    if(id){
+
+        pagos =
+        pagos.map(p =>
+            p.id === Number(id)
+            ? registro
+            : p
+        );
+
+    }else{
+
+        pagos.push(registro);
+
+    }
+
+    guardarDatos();
+
+    limpiarPago();
+
+    mostrarPagos();
+}
+
+
+function editarPago(id){
+
+    const p =
+    pagos.find(x => x.id === id);
+
+    if(!p) return;
+
+    document.getElementById("pago-id").value=p.id;
+    document.getElementById("pago-monto").value=p.monto;
+    document.getElementById("pago-metodo").value=p.metodo;
+    document.getElementById("pago-fecha").value=p.fecha;
+
+    document.getElementById("select-atleta-pago").value=
+    p.atletaId;
+
+    cargarDeportesPago();
+
+    setTimeout(() => {
+
+        document
+        .querySelectorAll(
+            'input[name="deporte-pago"]'
+        )
+        .forEach(c => {
+
+            c.checked =
+            p.deportes.includes(Number(c.value));
+
+        });
+
+    },50);
+
+    document
+    .getElementById("btn-save-pago")
+    .textContent="Actualizar Pago";
+
+    window.scrollTo(0,0);
+}
+
+
+function eliminarPago(id){
+
+    if(!confirm("¿Eliminar este pago?"))
+    return;
+
+    pagos =
+    pagos.filter(p => p.id !== id);
+
+    guardarDatos();
+
+    mostrarPagos();
+}
+
+
+function limpiarPago(){
+
+    document.getElementById("pago-id").value="";
+    document.getElementById("pago-monto").value="";
+    document.getElementById("pago-metodo").value="";
+    document.getElementById("pago-fecha").value="";
+    document.getElementById("select-atleta-pago").value="";
+
+    document.getElementById("lista-deportes-pago")
+    .innerHTML="";
+
+    document
+    .getElementById("btn-save-pago")
+    .textContent="Guardar Pago";
+}
+
+
+function mostrarPagos(){
+
+    const tbody =
+    document.getElementById("tabla-pagos");
+
+    if(pagos.length===0){
+
+        tbody.innerHTML=
+        `<tr>
+        <td colspan="7" style="text-align:center">
+        Sin registros.
+        </td>
+        </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML="";
+
+    const atletasConPagos =
+    [...new Set(
+        pagos.map(p => p.atletaId)
+    )];
+
+    atletasConPagos.forEach(atletaId => {
+
+        const pagosAtleta =
+        pagos.filter(
+            p => p.atletaId === atletaId
+        );
+
+        const ultimo =
+        pagosAtleta[pagosAtleta.length-1];
+
+        const atleta =
+        atletas.find(
+            a => a.id === atletaId
+        );
+
+        const nombreAtleta =
+        atleta
+        ? `${atleta.nombre} ${atleta.apellido}`
+        : "Desconocido";
+
+
+        const nombresDeportes =
+        ultimo.deportes.map(id => {
+
+            const d =
+            deportes.find(x => x.id === id);
+
+            return d ? d.deporte : "Desconocido";
+
+        }).join(", ");
+
+
+        tbody.innerHTML += `
+
+        <tr>
+
+        <td>
+        <strong>
+        $${Number(ultimo.monto).toFixed(2)}
+        </strong>
+        </td>
+
+        <td>
+        ${ultimo.metodo}
+        </td>
+
+        <td>
+        ${ultimo.fecha}
+        </td>
+
+        <td>
+        ${nombreAtleta}
+        </td>
+
+        <td>
+        ${nombresDeportes}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-history"
+        onclick="verHistorial(${atletaId})">
+
+        <i class="fas fa-history"></i>
+        Ver (${pagosAtleta.length})
+
+        </button>
+
+        </td>
+
+        <td>
+
+        <button
+        class="btn-edit"
+        onclick="editarPago(${ultimo.id})">
+
+        <i class="fas fa-edit"></i>
+
+        </button>
+
+        <button
+        class="btn-delete"
+        onclick="eliminarPago(${ultimo.id})">
+
+        <i class="fas fa-trash"></i>
+
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+
+function verHistorial(atletaId){
+
+    const atleta =
+    atletas.find(a => a.id === atletaId);
+
+    const pagosAtleta =
+    pagos.filter(
+        p => p.atletaId === atletaId
+    );
+
+    if(!atleta || !pagosAtleta.length)
+    return;
+
+    let texto =
+    `Historial de pagos de ${atleta.nombre} ${atleta.apellido}\n\n`;
+
+    pagosAtleta.forEach((p,i) => {
+
+        const nombres =
+        p.deportes.map(id => {
+
+            const d =
+            deportes.find(x => x.id === id);
+
+            return d ? d.deporte : "";
+
+        }).join(", ");
+
+        texto +=
+        `${i+1}. $${Number(p.monto).toFixed(2)} | ${p.metodo} | ${p.fecha} | ${nombres}\n`;
+
+    });
+
+    alert(texto);
+}
+
+
+/* =====================================================
+   GUARDAR LOCALSTORAGE
+===================================================== */
+
+function guardarDatos(){
+
+    localStorage.setItem(
+        "apex_deportes",
+        JSON.stringify(deportes)
+    );
+
+    localStorage.setItem(
+        "apex_entrenadores",
+        JSON.stringify(entrenadores)
+    );
+
+    localStorage.setItem(
+        "apex_asignaciones",
+        JSON.stringify(asignaciones)
+    );
+
+    localStorage.setItem(
+        "apex_atletas",
+        JSON.stringify(atletas)
+    );
+
+    localStorage.setItem(
+        "apex_pagos",
+        JSON.stringify(pagos)
+    );
+}
+
+
+/* =====================================================
+   ACTUALIZAR LISTAS
+===================================================== */
+
+function actualizarListas(){
+
+    actualizarListaAsignaciones();
+
+    actualizarListaAtletas();
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR TODO
+===================================================== */
+
+function actualizarTodo(){
+
+    mostrarDeportes();
+
+    mostrarEntrenadores();
+
+    mostrarAsignaciones();
+
+    mostrarAtletas();
+
+    mostrarPagos();
+
+    actualizarListas();
+
+}
+
+
+/* =====================================================
+   INICIO AUTOMÁTICO
+===================================================== */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    const usuario =
+    localStorage.getItem("apex_admin");
+
+    if(usuario){
+
+        iniciarSistema();
+
+    }
+
+    actualizarTodo();
+
+});
+
+</script>
 
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asignaciones | Nexus Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
-     
-</head>
-<body>
-    <div class="container">
-        <div class="view active">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-            <div class="tabs">
-                <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-                <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-                <a href="../asignaciones.html" class="tab-btn active"><i class="fas fa-link"></i> Asignaciones</a>
-                <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-                <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
-            </div>
-
-            <div class="card">
-                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-link text-primary"></i> Asignar Deportes</h4>
-                <input type="hidden" id="asignacion-id">
-                <div class="form-group"> 
-                    <label for="select-entrenador">Seleccionar Entrenador:</label>
-                    <select id="select-entrenador" required>
-                        <option value="">-- Seleccione --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                <label style="font-weight: bold;font-size: 1rem;"> lista de deporte </label>
-                  </div>   
-
-                    <div class="checkbox-group-container" id="sports-container-box" style="display: block;">
-                        <label style="font-size: 0.8rem; margin-bottom: 8px;">Seleccione uno o más:</label>
-                        <div class="checkbox-group" id="deportes-checkbox-container"></div>
-                    </div>
-                </div>
-                <button id="btn-save-asignacion" onclick="guardarAsignacion()"> Guardar Asignación </button>
-            </div>
-
-
-            <div class="table-container">
-                <h4 style="margin-bottom: 15px; font-weight: 700;">Asignaciones Activas</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Entrenador</th>
-                            <th>Deportes Asignados</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-asignaciones-body"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-   <script src="script/libreria compartida.js"></script> 
-   <script type="module" src="../script/db.js"></script>
-  <script src="script/asignaciones.js"></script> 
-
-</body>
-</html>   
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atletas | Nexus Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
-    
-</head>
-<body>
-    <div class="container">
-        <div class="view active">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-            <div class="tabs">
-                <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-                <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-                <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-                <a href="../atletas.html" class="tab-btn active"><i class="fas fa-users"></i> Atletas</a>
-                <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
-            </div>
-
-            <div class="card">
-                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-user-graduate text-primary"></i> Registrar Atleta</h4>
-                <input type="hidden" id="atleta-id-hidden">
-                <div class="form-group">
-                    <label for="atleta-cedula">Cédula (Numérico):</label>
-                    <input type="number" id="atleta-cedula" placeholder="Ej. 12345678" required>
-                </div>
-                <div class="form-group">
-                    <label for="atleta-nombre">Nombre:</label>
-                    <input type="text" id="atleta-nombre" placeholder="Nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="atleta-apellido">Apellido:</label>
-                    <input type="text" id="atleta-apellido" placeholder="Apellido" required>
-                </div>
-                <div class="form-group">
-                    <label for="atleta-telefono">Teléfono (Numérico):</label>
-                    <input type="number" id="atleta-telefono" placeholder="Ej. 70000000" required>
-                </div>
-                <div class="form-group">
-                    
-                    <div class="checkbox-group-container" id="contenedor-deportes">
-                        <label style="font-size: 0.8rem; margin-bottom: 8px;">Seleccione uno o más Deportes del Atleta :</label>
-                        <div class="checkbox-group" id="atleta-deportes-checkbox-container"></div>
-                    </div>
-                </div>
-                <button id="btn-save-atleta" onclick="guardarAtleta()">Guardar Atleta</button>
-            </div>
-
-            <div class="table-container">
-                <h4 style="margin-bottom: 15px; font-weight: 700;">Atletas Registrados</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cédula</th>
-                            <th>Nombre & Apellido</th>
-                            <th>Teléfono</th>
-                            <th>Deportes</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-atletas-body"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-     <script src="script/libreria compartida.js"></script>  
-    <script type="module" src="../script/db.js"></script>
-  <script src="script/atletas.js"></script>  
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagos | Nexus Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
-   
-   
-</head>
-<body>
-    <div class="container">
-        <div class="view active">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-            <div class="tabs">
-                <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-                <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-                <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-                <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-                <a href="../pagos.html" class="tab-btn active"><i class="fas fa-cash-register"></i> Pagos</a>
-            </div>
-
-            <div class="card">
-                <h4 style="margin-bottom: 20px; font-weight: 700;"><i class="fas fa-wallet text-primary"></i> Registro de Pagos Deportivos</h4>
-                <input type="hidden" id="pago-id-hidden">
-                <div class="form-group">
-                    <label for="pago-monto">Monto ($):</label>
-                    <input type="number" step="0.01" min="0" id="pago-monto" placeholder="Ej. 50.00" required>
-                </div>
-                <div class="form-group">
-                    <label for="pago-metodo">Método de Pago:</label>
-                    <select id="pago-metodo" required>
-                        <option value="">-- Seleccione método --</option>
-                        <option value="Transferencia">Transferencia</option>
-                        <option value="Tarjeta">Tarjeta</option>
-                        <option value="Efectivo">Efectivo</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="pago-fecha">Fecha:</label>
-                    <input type="date" id="pago-fecha" required>
-                </div>
-                <div class="form-group">
-                    <label for="select-atleta-pago">Atleta:</label>
-                    <select id="select-atleta-pago" onchange="onAtletaPagoSelected(this.value)" required>
-                        <option value="">-- Seleccione un atleta --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Deportes del Atleta:</label>
-                    <div id="pago-deportes-container">
-                        <span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>
-                    </div>
-                </div>
-                <button id="btn-save-pago" onclick="guardarPago()">Guardar Pago</button>
-            </div>
-
-            <div class="table-container">
-                <h4 style="margin-bottom: 15px; font-weight: 700;">Historial de Pagos</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Monto</th>
-                            <th>Método</th>
-                            <th>Fecha</th>
-                            <th>Atleta</th>
-                            <th>Deportes</th>
-                            <th>Historial / Pagos Anteriores</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-pagos-body"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    
-    <script src="script/libreria compartida.js"></script>  
-    <script type="module" src="../script/db.js"></script>
-    <script src="script/pagos.js"></script> 
-      
-</body>
-</html>
-
-        let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-        let dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
-        
-        const variosDeportesFijos = [ ];
-        
-        
-
-        const dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
-        for(let i = 0; i < dbDeportes.length ; i++){ 
-           variosDeportesFijos.push(dbDeportes[i].deporte)
-
-        }
-
-
-        function toggleDeportesView(value) {
-            const box = document.getElementById('sports-container-box');
-            box.style.display = (value === 'mostrar') ? 'block' : 'none';
-            if(value !== 'mostrar') document.querySelectorAll('input[name="deporte-check"]').forEach(cb => cb.checked = false);
-        }
-
-        function actualizarAsignacionSelectors() {
-            const sel = document.getElementById('select-entrenador');
-            sel.innerHTML = `<option value="">-- Seleccione Entrenador --</option>`;
-            dbEntrenadores.forEach(e => sel.innerHTML += `<option value="${e.id}">${e.nombre} ${e.apellido}</option>`);
-
-            const cont = document.getElementById('deportes-checkbox-container');
-            cont.innerHTML = "";
-            variosDeportesFijos.forEach((dep, idx) => {
-                cont.innerHTML += `
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="deporte-check" value="${dep}" data-deporte-id="${700+idx}">
-                        <span>${dep}</span>
-                    </label>
-                `;
-            });
-        }
-
-        async function guardarAsignacion() {
-            const editId = document.getElementById('asignacion-id').value;
-            const entrenadorId = document.getElementById('select-entrenador').value;
-             
-            const checks = document.querySelectorAll('input[name="deporte-check"]:checked');
-           
-            let deportes = [];
-            checks.forEach(c => deportes.push({ nombre: c.value, deporteId: parseInt(c.getAttribute('data-deporte-id')) }));
-            window.guardarAsignacion = guardarAsignacion
-            if(!entrenadorId || deportes.length === 0) return alert("Seleccione entrenador y al menos un deporte.");
-
-            const record = { id: editId ? parseInt(editId) : Date.now(), entrenadorId: parseInt(entrenadorId), deportes };
-            if(editId) {
-                dbAsignaciones = dbAsignaciones.map(i => i.id === record.id ? record : i);
-                document.getElementById('asignacion-id').value = "";
-             
-                document.getElementById('btn-save-asignacion').textContent = "Guardar Asignación";
-            } else {
-                dbAsignaciones.push(record);
-            }
-
-            localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
-
-            try {
-                await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDB, "asignaciones"),
-                    record
-                );
-                console.log("✅ Asignación guardada en Firebase");
-            } catch (error) {
-                console.error("❌ Error al guardar asignación en Firebase:", error);
-                alert("La asignación se guardó en la página, pero NO en Firebase.");
-            }
-
-              limpiarformularioAsignacion();
-            mostrarAsignaciones();
-        }
-
-        function  limpiarformularioAsignacion() {
-            document.getElementById('asignacion-id').value = "";
-            document.getElementById('select-entrenador').value = "";
-   
-            document.getElementById('sports-container-box').style.display = 'none';
-            document.querySelectorAll('input[name="deporte-check"]').forEach(c => c.checked = false);
-        }
-
-        function mostrarAsignaciones() {
-            const tbody = document.getElementById('table-asignaciones-body');
-            tbody.innerHTML = dbAsignaciones.length === 0 ? `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';
-            dbAsignaciones.forEach(item => {
-                const ent = dbEntrenadores.find(e => e.id === item.entrenadorId);
-                const nombreEnt = ent ? `${ent.nombre} ${ent.apellido}` : 'Desconocido';
-                const depNames = item.deportes.map(d => d.nombre).join(', ');
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${nombreEnt}</strong></td>
-                        <td>${depNames}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarAsignacion(${item.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete" onclick="eliminarAsignacion(${item.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function editarAsignacion(id) {
-            const item = dbAsignaciones.find(i => i.id === id);
-            if(!item) return;
-            document.getElementById('asignacion-id').value = item.id;
-            document.getElementById('select-entrenador').value = item.entrenadorId;
-            document.getElementById('toggle-deportes-select').value = 'mostrar';
-            document.getElementById('sports-container-box').style.display = 'block';
-
-            const names = item.deportes.map(d => d.nombre);
-            document.querySelectorAll('input[name="deporte-check"]').forEach(c => c.checked = names.includes(c.value));
-            document.getElementById('btn-save-asignacion').textContent = "Actualizar Asignación";
-            window.scrollTo(0, 0);
-        }
-
-        function eliminarAsignacion(id) {
-            
-            if(confirm("¿Eliminar asignación?")) {
-                dbAsignaciones = dbAsignaciones.filter(i => i.id !== id);
-                localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
-                mostrarAsignaciones();
-            }
-        }
-
-        actualizarAsignacionSelectors();
-mostrarAsignaciones();
-window.eliminarAsignacion = eliminarAsignacion;
-window.editarAsignacion = editarAsignacion;
-  let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
-       
-        
-       
-       
-       
-
-         function mostrarListadeDeportes() {             
-            const box = document.getElementById('contenedor-deportes');
-            box.style.display = 'block' ;           
-           
-            const variosDeportesFijos = [];
-
-            const dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
-            for(let i = 0; i < dbDeportes.length ; i++){ 
-               variosDeportesFijos.push(dbDeportes[i].deporte)
-            }
-
-            const cont = document.getElementById('atleta-deportes-checkbox-container');
-            cont.innerHTML = "";
-            variosDeportesFijos.forEach((dep, idx) => {
-                cont.innerHTML += `
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="atleta-deporte-check" value="${dep}" data-deporte-id="${900+idx}">
-                        <span>${dep}</span>
-                    </label>
-                `;
-            });
-        }
-
-        async function guardarAtleta() {
-            const editId = document.getElementById('atleta-id-hidden').value;
-            const cedula = parseInt(document.getElementById('atleta-cedula').value);
-            const nombre = document.getElementById('atleta-nombre').value.trim();
-            const apellido = document.getElementById('atleta-apellido').value.trim();
-            const telefono = parseInt(document.getElementById('atleta-telefono').value);
-            const checks = document.querySelectorAll('input[name="atleta-deporte-check"]:checked');
-
-            let deportes = [];
-            checks.forEach(c => deportes.push(c.value));
-
-            if(isNaN(cedula) || !nombre || !apellido || isNaN(telefono) || deportes.length === 0) {
-                alert("Complete todos los campos de atleta y seleccione al menos un deporte.");
-                return;
-            }
-
-            const record = { id: editId ? parseInt(editId) : Date.now(), cedula, nombre, apellido, telefono, deportes };
-            if(editId) {
-                dbAtletas = dbAtletas.map(i => i.id === record.id ? record : i);
-                document.getElementById('atleta-id-hidden').value = "";
-                document.getElementById('btn-save-atleta').textContent = "Guardar Atleta";
-            } else {
-                dbAtletas.push(record);
-            }
-
-           localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
-
-            try {
-                await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDB, "atletas"),
-                    record
-                );
-                console.log("✅ Atleta guardado en Firebase");
-            } catch (error) {
-                console.error("❌ Error al guardar en Firebase:", error);
-                alert("El atleta se guardó en la página, pero NO en Firebase. Revisa la consola.");
-            }
-
-             limpiarformularioAtleta();
-            mostrarAtletas();
-            mostrarListadeDeportes();
-        }
-
-        function  limpiarformularioAtleta() {
-            document.getElementById('atleta-id-hidden').value = "";
-            document.getElementById('atleta-cedula').value = "";
-            document.getElementById('atleta-nombre').value = "";
-            document.getElementById('atleta-apellido').value = "";
-            document.getElementById('atleta-telefono').value = "";
-        
-            document.getElementById('contenedor-deportes').style.display = 'none';
-            document.querySelectorAll('input[name="atleta-deporte-check"]').forEach(c => c.checked = false);
-        }
-
-        function mostrarAtletas() {
-            const tbody = document.getElementById('table-atletas-body');
-            tbody.innerHTML = dbAtletas.length === 0 ? `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';
-            dbAtletas.forEach(item => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><code>${item.cedula}</code></td>
-                        <td><strong>${item.nombre} ${item.apellido}</strong></td>
-                        <td>${item.telefono}</td>
-                        <td>${item.deportes.join(', ')}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarAtleta(${item.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete" onclick="eliminarAtleta(${item.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function editarAtleta(la) {
-            const item = dbAtletas.find(i => i.id === la);
-            if(!item) return;
-            document.getElementById('atleta-id-hidden').value = item.id;
-            document.getElementById('atleta-cedula').value = item.cedula;
-            document.getElementById('atleta-nombre').value = item.nombre;
-            document.getElementById('atleta-apellido').value = item.apellido;
-            document.getElementById('atleta-telefono').value = item.telefono;
-            
-            document.getElementById('contenedor-deportes').style.display = 'block';
-
-            document.querySelectorAll('input[name="atleta-deporte-check"]').forEach(c => c.checked = item.deportes.includes(c.value));
-            document.getElementById('btn-save-atleta').textContent = "Actualizar Atleta";
-            window.scrollTo(0, 0);
-        }
-
-        function eliminarAtleta(id) {
-            if(confirm("¿Eliminar atleta?")) {
-                dbAtletas = dbAtletas.filter(i => i.id !== id);
-                localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
-                mostrarAtletas();
-            }
-        }
-
-        mostrarListadeDeportes();
-        mostrarAtletas();
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const firebaseConfig = {
-            apiKey: "AIzaSyDh91TvqhSFgxRzFz1fsYhKpuyot5frpP0",
-            authDomain: "pagosdeportivos.firebaseapp.com",
-            projectId: "pagosdeportivos",
-            storageBucket: "pagosdeportivos.firebasestorage.app",
-            messagingSenderId: "873416848905",
-            appId: "1:873416848905:web:47b88fd58e49b5434caad8",
-            measurementId: "G-N46ZN36L2M"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-        window.firebaseDB = db;
-        window.firebaseCollection = collection;
-        window.firebaseAddDoc = addDoc;
-       
-
- let dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
-
-        function selectPresetSport(nombre, desc) {
-            document.getElementById('nombre-deporte').value = nombre;
-            document.getElementById('descripcion-deporte').value = desc;
-            document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
-            const map = { 'Fútbol': 'futbol', 'Básquet': 'basket', 'Natación': 'natacion', 'Gimnasio': 'gym' };
-            if(map[nombre]) document.getElementById(`card-${map[nombre]}`).classList.add('selected');
-        }
-
-        function handleManualSportInput() {
-            document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
-        }
-
-        async function guardardeporte() {
-            const editId = document.getElementById('deporte-id').value;
-            const deporte = document.getElementById('nombre-deporte').value.trim();
-            const monto = parseFloat(document.getElementById('monto-deporte').value);
-            const descripcion = document.getElementById('descripcion-deporte').value.trim();
-
-            if(!deporte || isNaN(monto) || !descripcion) return alert("Complete todos los campos del deporte.");
-
-            const record = { id: editId ? parseInt(editId) : Date.now(), deporte, monto, descripcion };
-            if(editId) {
-                dbDeportes = dbDeportes.map(i => i.id === record.id ? record : i);
-                document.getElementById('deporte-id').value = "";
-                document.getElementById('btn-save-deporte').textContent = "Guardar Deporte";
-            } else {
-                dbDeportes.push(record);
-            }
-
-            localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));
-
-            try {
-                await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDB, "deportes"),
-                    record
-                );
-                console.log("✅ Deporte guardado en Firebase");
-            } catch (error) {
-                console.error("❌ Error al guardar deporte en Firebase:", error);
-                alert("El deporte se guardó en la página, pero NO en Firebase.");
-            }
-
-             limpiarformularioDeporte();
-            mostrarDeportes();
-        }
-
-        function limpiarformularioDeporte() {
-            document.getElementById('deporte-id').value = "";
-            document.getElementById('nombre-deporte').value = "";
-            document.getElementById('monto-deporte').value = "";
-            document.getElementById('descripcion-deporte').value = "";
-            document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
-        }
-
-        function mostrarDeportes() {
-            const tbody = document.getElementById('table-deportes-body');
-            tbody.innerHTML = dbDeportes.length === 0 ? `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';
-            dbDeportes.forEach(item => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.deporte}</strong></td>
-                        <td style="color: var(--success); font-weight:700;">$${item.monto.toFixed(2)}</td>
-                        <td>${item.descripcion}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarDeporte(${item.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete" onclick="eliminarDeporte(${item.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function editarDeporte(id) {
-            const item = dbDeportes.find(i => i.id === id);
-            if(!item) return;
-            document.getElementById('deporte-id').value = item.id;
-            document.getElementById('nombre-deporte').value = item.deporte;
-            document.getElementById('monto-deporte').value = item.monto;
-            document.getElementById('descripcion-deporte').value = item.descripcion;
-            document.getElementById('btn-save-deporte').textContent = "Actualizar Deporte";
-            window.scrollTo(0, 0);
-        }
-
-        function eliminarDeporte(id) {
-            if(confirm("¿Eliminar deporte?")) {
-                dbDeportes = dbDeportes.filter(i => i.id !== id);
-                localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));
-                mostrarDeportes();
-            }
-        }
-
-        mostrarDeportes();
-
-        
- let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-
-        async function guardarEntrenador() {
-            const editId = document.getElementById('entrenador-id').value;
-            const nombre = document.getElementById('entrenador-nombre').value.trim();
-            const apellido = document.getElementById('entrenador-apellido').value.trim();
-            const telefono = document.getElementById('entrenador-telefono').value.trim();
-            const descripcion = document.getElementById('entrenador-descripcion').value.trim();
-
-            if(!nombre || !apellido || !telefono || !descripcion) return alert("Complete todos los campos del entrenador.");
-
-            const record = { id: editId ? parseInt(editId) : Math.floor(1000 + Math.random() * 9000), nombre, apellido, telefono, descripcion };
-            if(editId) {
-                dbEntrenadores = dbEntrenadores.map(i => i.id === record.id ? record : i);
-                document.getElementById('entrenador-id').value = "";
-                document.getElementById('btn-save-entrenador').textContent = "Guardar Entrenador";
-            } else {
-                dbEntrenadores.push(record);
-            }
-            localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
-
-            try {
-                await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDB, "entrenadores"),
-                    record
-                );
-                console.log("✅ Entrenador guardado en Firebase");
-            } catch (error) {
-                console.error("❌ Error al guardar entrenador en Firebase:", error);
-                alert("El entrenador se guardó en la página, pero NO en Firebase.");
-            }
-
-             limpiarformularioEntrenador();
-            mostrarEntrenadores();
-        }
-
-        function  limpiarformularioEntrenador() {
-            document.getElementById('entrenador-id').value = "";
-            document.getElementById('entrenador-nombre').value = "";
-            document.getElementById('entrenador-apellido').value = "";
-            document.getElementById('entrenador-telefono').value = "";
-            document.getElementById('entrenador-descripcion').value = "";
-        }
-
-        function mostrarEntrenadores() {
-            const tbody = document.getElementById('table-entrenadores-body');
-            tbody.innerHTML = dbEntrenadores.length === 0 ? `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';
-            dbEntrenadores.forEach(item => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.nombre} ${item.apellido}</strong></td>
-                        <td>${item.telefono}</td>
-                        <td>${item.descripcion}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarEntrenador(${item.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete" onclick="eliminarEntrenador(${item.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function editarEntrenador(id) {
-            const item = dbEntrenadores.find(i => i.id === id);
-            if(!item) return;
-            document.getElementById('entrenador-id').value = item.id;
-            document.getElementById('entrenador-nombre').value = item.nombre;
-            document.getElementById('entrenador-apellido').value = item.apellido;
-            document.getElementById('entrenador-telefono').value = item.telefono;
-            document.getElementById('entrenador-descripcion').value = item.descripcion;
-            document.getElementById('btn-save-entrenador').textContent = "Actualizar Entrenador";
-            window.scrollTo(0, 0);
-        }
-
-        function eliminarEntrenador(id) {
-            if(confirm("¿Eliminar entrenador?")) {
-                dbEntrenadores = dbEntrenadores.filter(i => i.id !== id);
-                localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
-                mostrarEntrenadores();
-            }
-        }
-
-        mostrarEntrenadores();
-                const user = localStorage.getItem('apex_admin');
-        if (!user) { window.location.href = "../index.html"; } 
-        else {
-            document.getElementById('admin-name').textContent = user;
-            document.getElementById('admin-initials').textContent = user.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-        }
-
-        function logout() {
-            localStorage.removeItem('apex_admin');
-            window.location.href = "../index.html";
-        }
-
-       // let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-       // let dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
-         let dbPagos = JSON.parse(localStorage.getItem('apex_pagos')) || [];
-        let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
-
-        function actualizarPagoAtletasSelector() {
-            const sel = document.getElementById('select-atleta-pago');
-            sel.innerHTML = `<option value="">-- Seleccione un atleta --</option>`;
-            dbAtletas.forEach(a => sel.innerHTML += `<option value="${a.id}">${a.nombre} ${a.apellido} (Cédula: ${a.cedula})</option>`);
-        }
-
-        function onAtletaPagoSelected(atletaId) {
-            const cont = document.getElementById('pago-deportes-container');
-            cont.innerHTML = "";
-            if(!atletaId) {
-                cont.style.display = 'none';
-                cont.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>`;
-                return;
-            }
-            const atleta = dbAtletas.find(a => a.id == atletaId);
-            if(!atleta || !atleta.deportes.length) {
-                cont.style.display = 'block';
-                cont.innerHTML = `<span style="color: var(--danger); font-size: 0.85rem;">Este atleta no tiene deportes asignados.</span>`;
-                return;
-            }
-            cont.style.display = 'block';
-            cont.innerHTML = `<label style="font-size: 0.8rem; margin-bottom: 6px;">Seleccione deporte(s) para este pago:</label>`;
-            atleta.deportes.forEach(dep => {
-                cont.innerHTML += `
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="pago-deporte-check" value="${dep}" checked>
-                        <span>${dep}</span>
-                    </label>
-                `;
-            });
-        }
-
-        async function guardarPago() {
-            const editId = document.getElementById('pago-id-hidden').value;
-            const monto = parseFloat(document.getElementById('pago-monto').value);
-            const metodo = document.getElementById('pago-metodo').value;
-            const fecha = document.getElementById('pago-fecha').value;
-            const atletaId = document.getElementById('select-atleta-pago').value;
-            const checks = document.querySelectorAll('input[name="pago-deporte-check"]:checked');
-
-            let deportes = [];
-            checks.forEach(c => deportes.push(c.value));
-
-            if(isNaN(monto) || !metodo || !fecha || !atletaId || deportes.length === 0) {
-                alert("Complete todos los campos del pago y seleccione al menos un deporte.");
-                return;
-            }
-
-            const record = { id: editId ? parseInt(editId) : Date.now(), monto, metodo, fecha, atletaId: parseInt(atletaId), deportes };
-            if(editId) {
-                dbPagos = dbPagos.map(i => i.id === record.id ? record : i);
-                document.getElementById('pago-id-hidden').value = "";
-                document.getElementById('btn-save-pago').textContent = "Guardar Pago";
-            } else {
-                dbPagos.push(record);
-            }
-
-           localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
-
-            try {
-                await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDB, "pagos"),
-                    record
-                );
-                console.log("✅ Pago guardado en Firebase");
-            } catch (error) {
-                console.error("❌ Error al guardar pago en Firebase:", error);
-                alert("El pago se guardó en la página, pero NO en Firebase.");
-            }
-
-             limpiarformularioPago();
-             mostrarPagos();
-        }
-
-        function  limpiarformularioPago() {
-            document.getElementById('pago-id-hidden').value = "";
-            document.getElementById('pago-monto').value = "";
-            document.getElementById('pago-metodo').value = "";
-            document.getElementById('pago-fecha').value = "";
-            document.getElementById('select-atleta-pago').value = "";
-            const cont = document.getElementById('pago-deportes-container');
-            cont.style.display = 'none';
-            cont.innerHTML = `<span style="color: var(--text-muted); font-size: 0.85rem;">Seleccione un atleta primero...</span>`;
-        }
-
-        function toggleSubRow(atletaId) {
-            const subRow = document.getElementById(`subrow-${atletaId}`);
-            const icon = document.getElementById(`icon-${atletaId}`);
-            if (subRow.style.display === 'table-row') {
-                subRow.style.display = 'none';
-                icon.className = 'fas fa-chevron-right';
-            } else {
-                subRow.style.display = 'table-row';
-                icon.className = 'fas fa-chevron-down';
-            }
-        }
-
-        function mostrarPagos() {
-            const tbody = document.getElementById('table-pagos-body');
-            tbody.innerHTML = dbPagos.length === 0 ? `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Sin registros.</td></tr>` : '';
-            
-            const atletasConPagos = [...new Set(dbPagos.map(p => p.atletaId))];
-
-            atletasConPagos.forEach(atletaId => {
-                const pagosDelAtleta = dbPagos.filter(p => p.atletaId === atletaId);
-                const ultimoPago = pagosDelAtleta[pagosDelAtleta.length - 1];
-                const atleta = dbAtletas.find(a => a.id === atletaId);
-                const nombreAtleta = atleta ? `${atleta.nombre} ${atleta.apellido}` : 'Desconocido';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="color: var(--success); font-weight:700;">$${ultimoPago.monto.toFixed(2)}</td>
-                        <td>${ultimoPago.metodo}</td>
-                        <td>${ultimoPago.fecha}</td>
-                        <td><strong>${nombreAtleta}</strong></td>
-                        <td>${ultimoPago.deportes.join(', ')}</td>
-                        <td>
-                            <button class="toggle-row-btn" onclick="toggleSubRow(${atletaId})">
-                                <i id="icon-${atletaId}" class="fas fa-chevron-right"></i> Ver (${pagosDelAtleta.length}) pagos
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn-edit" onclick="editarPago(${ultimoPago.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn-delete" onclick="eliminarPago(${ultimoPago.id})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-
-                let subHtml = `<tr id="subrow-${atletaId}" class="sub-row"><td colspan="7" style="padding: 15px;">`;
-                subHtml += `<p style="margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; color: var(--accent);">Historial completo de pagos de ${nombreAtleta}:</p>
-                <table class="sub-table">
-                    <thead>
-                        <tr style="font-size: 0.75rem;">
-                            <th>Monto</th>
-                            <th>Método</th>
-                            <th>Fecha</th>
-                            <th>Deportes</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-                pagosDelAtleta.forEach(p => {
-                    subHtml += `<tr>
-                        <td style="color: var(--success); font-weight:600;">$${p.monto.toFixed(2)}</td>
-                        <td>${p.metodo}</td>
-                        <td>${p.fecha}</td>
-                        <td>${p.deportes.join(', ')}</td>
-                    </tr>`;
-                });
-                subHtml += `</tbody></table></td></tr>`;
-                tbody.innerHTML += subHtml;
-            });
-        }
-
-        function editarPago(id) {
-            const item = dbPagos.find(i => i.id === id);
-            if(!item) return;
-            document.getElementById('pago-id-hidden').value = item.id;
-            document.getElementById('pago-monto').value = item.monto;
-            document.getElementById('pago-metodo').value = item.metodo;
-            document.getElementById('pago-fecha').value = item.fecha;
-            document.getElementById('select-atleta-pago').value = item.atletaId;
-
-            onAtletaPagoSelected(item.atletaId);
-            setTimeout(() => {
-                document.querySelectorAll('input[name="pago-deporte-check"]').forEach(c => {
-                    c.checked = item.deportes.includes(c.value);
-                });
-            }, 50);
-
-            document.getElementById('btn-save-pago').textContent = "Actualizar Pago";
-            window.scrollTo(0, 0);
-        }
-
-        function eliminarPago(id) {
-            if(confirm("¿Eliminar pago?")) {
-                dbPagos = dbPagos.filter(i => i.id !== id);
-                localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
-                mostrarPagos();
-            }
-        }
-
-        actualizarPagoAtletasSelector();
-        mostrarPagos();
-:root {
-    --primary: #69f157;
-    --primary-hover: #4feb4f;
-    --primary-light: rgba(105, 241, 87, 0.15);
-    --secondary: #0a140d;
-    --accent: #10b981;
-    --success: #34d399;
-    --danger: #ef4444;
-    --bg: #050b07;
-    --card-bg: rgba(15, 28, 20, 0.75);
-    --border: rgba(105, 241, 87, 0.2);
-    --text-main: #f0fdf4;
-    --text-muted: #739681;
-    --radius: 16px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-body { 
-    background: var(--bg); 
-    color: var(--text-main); 
-    min-height: 100vh; 
-    display: flex; 
-    justify-content: center; 
-    align-items: flex-start; 
-    padding: 40px 20px;
-    background-image: radial-gradient(at 0% 0%, rgba(105, 241, 87, 0.12) 0px, transparent 50%),
-                      radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
-    background-attachment: fixed;
-}
-
-.container { width: 100%; max-width: 1250px; }
-
-.view { 
-    display: none; 
-    background: var(--card-bg); 
-    backdrop-filter: blur(20px); 
-    border: 1px solid var(--border);
-    border-radius: var(--radius); 
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(105, 241, 87, 0.05); 
-    padding: 40px; 
-    animation: fadeIn 0.4s ease-out forwards;
-}
-
-.view.active { display: block; }
-
-@keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(10px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-
-#login-view { max-width: 440px; margin: 10vh auto; text-align: center; }
-
-.login-logo { 
-    width: 70px; 
-    height: 70px; 
-    background: linear-gradient(135deg, var(--primary), var(--accent)); 
-    border-radius: 20px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin: 0 auto 24px; 
-    box-shadow: 0 10px 25px rgba(105, 241, 87, 0.3); 
-}
-
-.login-logo i { font-size: 2rem; color: #050b07; }
-
-#login-view h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.025em; color: var(--text-main); }
-#login-view p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
-
-input, textarea, select { 
-    width: 100%; 
-    padding: 14px 16px; 
-    margin: 8px 0 16px 0; 
-    background: rgba(10, 20, 13, 0.6); 
-    border: 1px solid var(--border); 
-    border-radius: 12px; 
-    font-size: 0.95rem; 
-    color: var(--text-main); 
-    transition: var(--transition); 
-}
-
-input:focus, textarea:focus, select:focus { 
-    border-color: var(--primary); 
-    background: rgba(10, 20, 13, 0.9); 
-    box-shadow: 0 0 0 4px var(--primary-light); 
-    outline: none; 
-}
-
-input::placeholder, textarea::placeholder { color: #496352; }
-select option { background: var(--secondary); color: var(--text-main); }
-
-button { 
-    background: linear-gradient(135deg, var(--primary), var(--accent)); 
-    color: #050b07; 
-    border: none; 
-    padding: 14px 24px; 
-    border-radius: 12px; 
-    cursor: pointer; 
-    font-weight: 700; 
-    font-size: 0.95rem; 
-    width: 100%; 
-    transition: var(--transition); 
-    box-shadow: 0 4px 12px rgba(105, 241, 87, 0.25); 
-}
-
-button:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 20px rgba(105, 241, 87, 0.4); 
-    background: linear-gradient(135deg, var(--primary-hover), var(--primary)); 
-}
-
-.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; }
-.admin-badge { display: flex; align-items: center; gap: 12px; }
-
-.admin-avatar { 
-    width: 44px; 
-    height: 44px; 
-    background: var(--primary-light); 
-    border: 1px solid var(--primary); 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    color: var(--primary); 
-    font-weight: bold; 
-}
-
-.btn-logout { 
-    background: rgba(239, 68, 68, 0.1); 
-    color: var(--danger); 
-    border: 1px solid rgba(239, 68, 68, 0.2); 
-    width: auto; 
-    font-size: 0.85rem; 
-    padding: 10px 18px; 
-    box-shadow: none; 
-}
-
-.btn-logout:hover { 
-    background: var(--danger); 
-    color: white; 
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); 
-}
-
-.tabs { display: flex; gap: 8px; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 12px; overflow-x: auto; }
-
-.tab-btn { 
-    text-decoration: none; 
-    display: inline-block; 
-    background: transparent; 
-    color: var(--text-muted); 
-    border: 1px solid transparent; 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    font-size: 0.9rem; 
-    width: auto; 
-    transition: var(--transition); 
-    white-space: nowrap; 
-    box-shadow: none; 
-}
-
-.tab-btn:hover { color: var(--text-main); background: rgba(105, 241, 87, 0.05); transform: none; box-shadow: none; }
-.tab-btn.active { background: var(--primary-light); color: var(--primary); border-color: rgba(105, 241, 87, 0.3); box-shadow: none; }
-
-.card { background: rgba(10, 20, 13, 0.5); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; margin-bottom: 25px; }
-
-.sports-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
-
-.sport-card { 
-    background: rgba(10, 20, 13, 0.6); 
-    border: 1px solid var(--border); 
-    border-radius: 12px; 
-    padding: 14px 8px; 
-    text-align: center; 
-    cursor: pointer; 
-    transition: var(--transition); 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 8px; 
-}
-
-.sport-card i { font-size: 1.5rem; color: var(--text-muted); transition: var(--transition); }
-.sport-card span { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
-
-.sport-card:hover { border-color: var(--primary); background: rgba(105, 241, 87, 0.05); }
-.sport-card:hover i, .sport-card:hover span { color: var(--primary); }
-
-.sport-card.selected { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 15px rgba(105, 241, 87, 0.2); }
-.sport-card.selected i, .sport-card.selected span { color: var(--primary); }
-
-.form-group { margin-bottom: 18px; text-align: left; }
-label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-
-.checkbox-group-container { display: none; margin-top: 10px; }
-.checkbox-group { max-height: 180px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: rgba(10, 20, 13, 0.6); }
-.checkbox-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 0.95rem; cursor: pointer; color: var(--text-main); }
-.checkbox-item input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; cursor: pointer; }
-
-.table-container { margin-top: 20px; overflow-x: auto; background: rgba(10, 20, 13, 0.6); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-table { width: 100%; border-collapse: collapse; text-align: left; }
-th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-th { background: rgba(5, 11, 7, 0.8); color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; font-weight: 700; }
-tr:hover td { background: rgba(105, 241, 87, 0.02); }
-/* Ajuste para los botones de acción dentro de las tablas */
-td button {
-    width: auto;             /* Quita el ancho del 100% */
-    padding: 8px 14px;       /* Reduce el tamaño interior del botón */
-    font-size: 0.9rem;       /* Reduce ligeramente el tamaño del ícono */
-    margin: 4px 4px 4px 0;   /* Añade separación entre los botones */
-    border-radius: 8px;      /* Esquinas un poco más sutiles */
-    display: inline-flex;    /* Permite que se coloquen uno al lado del otro */
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(105, 241, 87, 0.15); /* Sombra proporcional al tamaño */
-}
-
-/* Opcional: Para evitar que la celda de acciones se colapse extrañamente */
-td:last-child {
-    white-space: nowrap;     /* Mantiene los botones en la misma línea si hay espacio */
-}
-
-        
