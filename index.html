@@ -461,9 +461,65 @@ let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
 let dbPagos = JSON.parse(localStorage.getItem('apex_pagos')) || [];
 
 /* =========================
-   LOGIN
+   LOGIN - UNICO ADMINISTRADOR GLOBAL
+   El primer administrador queda guardado en Firebase.
+   Cerrar sesión NO elimina al administrador.
 ========================= */
-document.getElementById('login-form').addEventListener('submit', function(e){
+const firebaseConfig = {
+    apiKey: "AIzaSyDh91TvqhSFgxRzFz1fsYhKpuyot5frpP0",
+    authDomain: "pagosdeportivos.firebaseapp.com",
+    projectId: "pagosdeportivos",
+    storageBucket: "pagosdeportivos.firebasestorage.app",
+    messagingSenderId: "873416848905",
+    appId: "1:873416848905:web:47b88fd58e49b5434caad8",
+    measurementId: "G-N46ZN36L2M"
+};
+
+let firebaseDB = null;
+let firebaseDoc = null;
+let firebaseRunTransaction = null;
+
+let firebaseAuth = null;
+let firebaseSignInAnonymously = null;
+
+const firebaseReady = Promise.all([
+    import("https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"),
+    import("https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js")
+]).then(([firebaseApp, firestore, auth]) => {
+    const app = firebaseApp.initializeApp(firebaseConfig);
+    firebaseDB = firestore.getFirestore(app);
+    firebaseDoc = firestore.doc;
+    firebaseRunTransaction = firestore.runTransaction;
+    firebaseAuth = auth.getAuth(app);
+    firebaseSignInAnonymously = auth.signInAnonymously;
+});
+
+async function obtenerORegistrarAdministrador(fullName){
+    await firebaseReady;
+
+    if(!firebaseAuth.currentUser){
+        await firebaseSignInAnonymously(firebaseAuth);
+    }
+
+    const adminRef = firebaseDoc(firebaseDB, 'configuracion', 'administrador');
+
+    return await firebaseRunTransaction(firebaseDB, async (transaction) => {
+        const snapshot = await transaction.get(adminRef);
+
+        if(!snapshot.exists()){
+            transaction.set(adminRef, {
+                nombre: fullName,
+                creadoEn: new Date().toISOString()
+            });
+            return fullName;
+        }
+
+        return snapshot.data().nombre;
+    });
+}
+
+document.getElementById('login-form').addEventListener('submit', async function(e){
     e.preventDefault();
 
     const nom = document.getElementById('admin-nombre').value.trim();
@@ -472,18 +528,20 @@ document.getElementById('login-form').addEventListener('submit', function(e){
     if(!nom || !ape) return;
 
     const fullName = `${nom} ${ape}`;
-    const userAux = localStorage.getItem('apex_admin');
 
-    if(!userAux){
-        localStorage.setItem('apex_admin', fullName);
-        mostrarApp();
-        return;
-    }
+    try{
+        const administrador = await obtenerORegistrarAdministrador(fullName);
 
-    if(fullName === userAux){
-        mostrarApp();
-    }else{
-        alert('El sistema ya tiene registrado otro administrador.');
+        if(fullName === administrador){
+            localStorage.setItem('apex_admin', administrador);
+            localStorage.setItem('apex_session', 'activa');
+            mostrarApp();
+        }else{
+            alert('El sistema ya tiene registrado otro administrador.');
+        }
+    }catch(error){
+        console.error('Error de inicio de sesión:', error);
+        alert('No se pudo verificar el administrador. Revisa la conexión a Internet y la configuración de Firebase.');
     }
 });
 
@@ -502,12 +560,34 @@ function mostrarApp(){
 }
 
 function logout(){
+    // NO se elimina apex_admin: el administrador queda registrado para siempre.
+    localStorage.removeItem('apex_session');
     document.getElementById('app-view').classList.remove('active');
     document.getElementById('login-view').classList.add('active');
     document.getElementById('login-form').reset();
 }
 
-if(localStorage.getItem('apex_admin')) mostrarApp();
+async function verificarSesionGuardada(){
+    const user = localStorage.getItem('apex_admin');
+    const session = localStorage.getItem('apex_session');
+
+    if(!user || session !== 'activa') return;
+
+    try{
+        const administrador = await obtenerORegistrarAdministrador(user);
+
+        if(administrador === user){
+            mostrarApp();
+        }else{
+            localStorage.removeItem('apex_admin');
+            localStorage.removeItem('apex_session');
+        }
+    }catch(error){
+        console.error('No se pudo verificar la sesión:', error);
+    }
+}
+
+verificarSesionGuardada();
 
 /* =========================
    NAVEGACIÓN
