@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Pro | Gestión Deportiva Premium</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus Pro | Gestión Deportiva Premium</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
 :root {
 --primary: #69f157;
 --primary-hover: #4feb4f;
@@ -24,7 +24,7 @@
 --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-- { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
 body {
 background: var(--bg);
@@ -201,44 +201,28 @@ justify-content: center;
 td {
 *white-space: nowrap;     /* Mantiene los botones en la misma línea si hay espacio */
 }
-    </style>
+    
+</style>
 </head>
 <body>
-<div class="container">
-<div id="page-login" class="view active">
-            <div class="login-logo">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h2>Acceso Administrativo</h2>
-            <p>Ingrese sus credenciales para acceder al sistema</p>
-            <form id="login-form">
-                <input type="text" id="admin-nombre" placeholder="Nombre" required>
-                <input type="text" id="admin-apellido" placeholder="Apellido" required>
-                <button type="submit">Iniciar Sesión </button>
-
-
-        </form>
-    </div>
-
-<div id="page-deportes" class="view">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-
-        <div class="tabs">
-            <a href="#deportes" class="tab-btn active"><i class="fas fa-futbol"></i> Deportes</a>
-            <a href="#entrenadores" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-            <a href="#asignaciones" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-            <a href="#atletas" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-            <a href="#pagos" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
+<div class="container" id="app"></div>
+<div id="templates" style="display:none">
+<template id="tpl-login"><div id="login-view" class="view active">
+    <div class="login-logo"><i class="fas fa-shield-alt"></i></div>
+    <h2>Acceso Administrativo</h2>
+    <p>Ingrese sus credenciales para acceder al sistema</p>
+    <form id="login-form">
+        <input type="text" id="admin-nombre" placeholder="Nombre" required>
+        <input type="text" id="admin-apellido" placeholder="Apellido" required>
+        <button type="submit">Iniciar Sesión </button>
+    </form>
+</div></template>
+<template id="tpl-deportes"><div class="view"><div class="header"><div class="admin-badge"><div class="admin-avatar" id="admin-initials">AD</div><div><h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4><span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span></div></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></div><div class="tabs">
+            <a href="../deportes.html" class="tab-btn active"><i class="fas fa-futbol"></i> Deportes</a>
+            <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
+            <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
+            <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
+            <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
         </div>
 
         <div class="card">
@@ -295,26 +279,13 @@ td {
             </table>
         </div>
     </div>
-
-<div id="page-entrenadores" class="view">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-
-        <div class="tabs">
-            <a href="#deportes" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-            <a href="#entrenadores" class="tab-btn active"><i class="fas fa-user-tie"></i> Entrenadores</a>
-            <a href="#asignaciones" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-            <a href="#atletas" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-            <a href="#pagos" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
+</div></div></template>
+<template id="tpl-entrenadores"><div class="view"><div class="header"><div class="admin-badge"><div class="admin-avatar" id="admin-initials">AD</div><div><h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4><span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span></div></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></div><div class="tabs">
+            <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
+            <a href="../entrenadores.html" class="tab-btn active"><i class="fas fa-user-tie"></i> Entrenadores</a>
+            <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
+            <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
+            <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
         </div>
 
         <div class="card">
@@ -354,26 +325,13 @@ td {
             </table>
         </div>
     </div>
-
-<div id="page-asignaciones" class="view">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-
-        <div class="tabs">
-            <a href="#deportes" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-            <a href="#entrenadores" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-            <a href="#asignaciones" class="tab-btn active"><i class="fas fa-link"></i> Asignaciones</a>
-            <a href="#atletas" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-            <a href="#pagos" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
+</div></div></template>
+<template id="tpl-asignaciones"><div class="view"><div class="header"><div class="admin-badge"><div class="admin-avatar" id="admin-initials">AD</div><div><h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4><span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span></div></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></div><div class="tabs">
+            <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
+            <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
+            <a href="../asignaciones.html" class="tab-btn active"><i class="fas fa-link"></i> Asignaciones</a>
+            <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
+            <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
         </div>
 
         <div class="card">
@@ -412,26 +370,13 @@ td {
             </table>
         </div>
     </div>
-
-<div id="page-atletas" class="view">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-
-        <div class="tabs">
-            <a href="#deportes" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-            <a href="#entrenadores" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-            <a href="#asignaciones" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-            <a href="#atletas" class="tab-btn active"><i class="fas fa-users"></i> Atletas</a>
-            <a href="#pagos" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
+</div></div></template>
+<template id="tpl-atletas"><div class="view"><div class="header"><div class="admin-badge"><div class="admin-avatar" id="admin-initials">AD</div><div><h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4><span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span></div></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></div><div class="tabs">
+            <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
+            <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
+            <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
+            <a href="../atletas.html" class="tab-btn active"><i class="fas fa-users"></i> Atletas</a>
+            <a href="../pagos.html" class="tab-btn"><i class="fas fa-cash-register"></i> Pagos</a>
         </div>
 
         <div class="card">
@@ -479,26 +424,13 @@ td {
             </table>
         </div>
     </div>
-
-<div id="page-pagos" class="view">
-            <div class="header">
-                <div class="admin-badge">
-                    <div class="admin-avatar" id="admin-initials">AD</div>
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4>
-                        <span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span>
-                    </div>
-                </div>
-                <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-            </div>
-
-
-        <div class="tabs">
-            <a href="#deportes" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
-            <a href="#entrenadores" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
-            <a href="#asignaciones" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
-            <a href="#atletas" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
-            <a href="#pagos" class="tab-btn active"><i class="fas fa-cash-register"></i> Pagos</a>
+</div></div></template>
+<template id="tpl-pagos"><div class="view"><div class="header"><div class="admin-badge"><div class="admin-avatar" id="admin-initials">AD</div><div><h4 style="font-size: 1.1rem; font-weight: 700;" id="admin-name">Administrador</h4><span style="font-size: 0.8rem; color: var(--success);"><i class="fas fa-circle" style="font-size: 6px;"></i> Sesión Activa</span></div></div><button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></div><div class="tabs">
+            <a href="../deportes.html" class="tab-btn"><i class="fas fa-futbol"></i> Deportes</a>
+            <a href="../entrenadores.html" class="tab-btn"><i class="fas fa-user-tie"></i> Entrenadores</a>
+            <a href="../asignaciones.html" class="tab-btn"><i class="fas fa-link"></i> Asignaciones</a>
+            <a href="../atletas.html" class="tab-btn"><i class="fas fa-users"></i> Atletas</a>
+            <a href="../pagos.html" class="tab-btn active"><i class="fas fa-cash-register"></i> Pagos</a>
         </div>
 
         <div class="card">
@@ -554,6 +486,7 @@ td {
             </table>
         </div>
     </div>
+</div></div></template>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -569,41 +502,51 @@ measurementId: "G-N46ZN36L2M"
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-window.firebaseDB = db;
-window.firebaseCollection = collection;
-window.firebaseAddDoc = addDoc;
-</script>
-<script>
-
-    document.getElementById('login-form').onsubmit = (e) => {
-        e.preventDefault();
-        const nom = document.getElementById('admin-nombre').value.trim();
-        const ape = document.getElementById('admin-apellido').value.trim();
-        if(nom && ape) {
-            const fullName = `${nom} ${ape}`;
-            
-            //evitar guardar otro usuario
-            const userAux = localStorage.getItem('apex_admin');
-            if( userAux == null || userAux == undefined)
-            {                             
-                localStorage.setItem('apex_admin', fullName);                  
-            }
-
-            if(fullName ===userAux ){                    
-                showPage("deportes"); 
-            }               
-        }
-    };
 
 
-var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-    var dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
+
+    window.firebaseDB = db;
+    window.firebaseCollection = collection;
+    window.firebaseAddDoc = addDoc;
+
+function setUserHeader() {
+ const user=localStorage.getItem('apex_admin');
+ document.querySelectorAll('#admin-name').forEach(e=>e.textContent=user||'Administrador');
+ document.querySelectorAll('#admin-initials').forEach(e=>e.textContent=user?user.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase():'AD');
+}
+function loadTemplate(name){
+ const app=document.getElementById('app');
+ app.innerHTML=document.getElementById('tpl-'+name).innerHTML;
+ if(name!=='login') setUserHeader();
+}
+
+function initLogin(){
+ const form=document.getElementById('login-form');
+ form.onsubmit=(e)=>{
+  e.preventDefault();
+  const nom=document.getElementById('admin-nombre').value.trim();
+  const ape=document.getElementById('admin-apellido').value.trim();
+  if(nom && ape){
+   const fullName=`${nom} ${ape}`;
+   const userAux=localStorage.getItem('apex_admin');
+   if(userAux==null || userAux==undefined){ localStorage.setItem('apex_admin',fullName); window.location.hash='#deportes'; return; }
+   if(fullName===userAux){ window.location.hash='#deportes'; }
+  }
+ };
+}
+function logout(){ localStorage.removeItem('apex_admin'); window.location.hash='#login'; }
+window.logout=logout;
+
+function initAsignaciones(){
+
+    let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
+    let dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
     
     const variosDeportesFijos = [ ];
     
     
 
-    var dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
+    const dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
     for(let i = 0; i < dbDeportes.length ; i++){ 
        variosDeportesFijos.push(dbDeportes[i].deporte)
 
@@ -668,7 +611,6 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         }
 
           limpiarformularioAsignacion();
-        mostrarAsignaciones();
     }
 
     function  limpiarformularioAsignacion() {
@@ -718,20 +660,24 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         if(confirm("¿Eliminar asignación?")) {
             dbAsignaciones = dbAsignaciones.filter(i => i.id !== id);
             localStorage.setItem('apex_asignaciones', JSON.stringify(dbAsignaciones));
-            mostrarAsignaciones();
         }
     }
 
-    actualizarAsignacionSelectors();
 
 
-mostrarAsignaciones();
+
 window.eliminarAsignacion = eliminarAsignacion;
 window.editarAsignacion = editarAsignacion;
-var dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
+let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
 
 
 
+
+window.toggleDeportesView=toggleDeportesView; window.actualizarAsignacionSelectors=actualizarAsignacionSelectors; window.guardarAsignacion=guardarAsignacion; window.limpiarformularioAsignacion=limpiarformularioAsignacion; window.mostrarAsignaciones=mostrarAsignaciones; window.editarAsignacion=editarAsignacion; window.eliminarAsignacion=eliminarAsignacion;
+actualizarAsignacionSelectors(); mostrarAsignaciones();
+}
+function initAtletas(){
+let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
 
      function mostrarListadeDeportes() {             
         const box = document.getElementById('contenedor-deportes');
@@ -739,7 +685,7 @@ var dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
        
         const variosDeportesFijos = [];
 
-        var dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
+        const dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
         for(let i = 0; i < dbDeportes.length ; i++){ 
            variosDeportesFijos.push(dbDeportes[i].deporte)
         }
@@ -795,8 +741,6 @@ var dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
         }
 
          limpiarformularioAtleta();
-        mostrarAtletas();
-        mostrarListadeDeportes();
     }
 
     function  limpiarformularioAtleta() {
@@ -849,14 +793,19 @@ var dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
         if(confirm("¿Eliminar atleta?")) {
             dbAtletas = dbAtletas.filter(i => i.id !== id);
             localStorage.setItem('apex_atletas', JSON.stringify(dbAtletas));
-            mostrarAtletas();
         }
     }
 
-    mostrarListadeDeportes();
-    mostrarAtletas();
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-var dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
+window.mostrarListadeDeportes=mostrarListadeDeportes; window.guardarAtleta=guardarAtleta; window.limpiarformularioAtleta=limpiarformularioAtleta; window.mostrarAtletas=mostrarAtletas; window.editarAtleta=editarAtleta; window.eliminarAtleta=eliminarAtleta;
+mostrarAtletas(); mostrarListadeDeportes();
+}
+function initDeportes(){
+
+
+let dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
+
 
 
     function selectPresetSport(nombre, desc) {
@@ -902,7 +851,6 @@ var dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
         }
 
          limpiarformularioDeporte();
-        mostrarDeportes();
     }
 
     function limpiarformularioDeporte() {
@@ -946,16 +894,20 @@ var dbDeportes = JSON.parse(localStorage.getItem('apex_deportes')) || [];
         if(confirm("¿Eliminar deporte?")) {
             dbDeportes = dbDeportes.filter(i => i.id !== id);
             localStorage.setItem('apex_deportes', JSON.stringify(dbDeportes));
-            mostrarDeportes();
         }
     }
 
-    mostrarDeportes();
 
     
 
+window.selectPresetSport=selectPresetSport; window.handleManualSportInput=handleManualSportInput; window.guardardeporte=guardardeporte; window.limpiarformularioDeporte=limpiarformularioDeporte; window.mostrarDeportes=mostrarDeportes; window.editarDeporte=editarDeporte; window.eliminarDeporte=eliminarDeporte;
+mostrarDeportes();
+}
+function initEntrenadores(){
 
-var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
+
+let dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
+
 
 
     async function guardarEntrenador() {
@@ -989,7 +941,6 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         }
 
          limpiarformularioEntrenador();
-        mostrarEntrenadores();
     }
 
     function  limpiarformularioEntrenador() {
@@ -1034,23 +985,15 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         if(confirm("¿Eliminar entrenador?")) {
             dbEntrenadores = dbEntrenadores.filter(i => i.id !== id);
             localStorage.setItem('apex_entrenadores', JSON.stringify(dbEntrenadores));
-            mostrarEntrenadores();
         }
     }
 
-    mostrarEntrenadores();
-            const user = localStorage.getItem('apex_admin');
-    
-
-    function logout() {
-        localStorage.removeItem('apex_admin');
-        showPage("login");
-    }
-
-   // var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || [];
-   // var dbAsignaciones = JSON.parse(localStorage.getItem('apex_asignaciones')) || [];
-     var dbPagos = JSON.parse(localStorage.getItem('apex_pagos')) || [];
-    var dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
+window.guardarEntrenador=guardarEntrenador; window.limpiarformularioEntrenador=limpiarformularioEntrenador; window.mostrarEntrenadores=mostrarEntrenadores; window.editarEntrenador=editarEntrenador; window.eliminarEntrenador=eliminarEntrenador;
+mostrarEntrenadores();
+}
+function initPagos(){
+     let dbPagos = JSON.parse(localStorage.getItem('apex_pagos')) || [];
+    let dbAtletas = JSON.parse(localStorage.getItem('apex_atletas')) || [];
 
     function actualizarPagoAtletasSelector() {
         const sel = document.getElementById('select-atleta-pago');
@@ -1123,7 +1066,6 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         }
 
          limpiarformularioPago();
-         mostrarPagos();
     }
 
     function  limpiarformularioPago() {
@@ -1229,43 +1171,28 @@ var dbEntrenadores = JSON.parse(localStorage.getItem('apex_entrenadores')) || []
         if(confirm("¿Eliminar pago?")) {
             dbPagos = dbPagos.filter(i => i.id !== id);
             localStorage.setItem('apex_pagos', JSON.stringify(dbPagos));
-            mostrarPagos();
         }
     }
 
-    actualizarPagoAtletasSelector();
-    mostrarPagos();
-
-
-function showPage(name) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    const page = document.getElementById('page-' + name);
-    if (page) page.classList.add('active');
-    if (name !== 'login') {
-        const user = localStorage.getItem('apex_admin');
-        if (!user) { showPage('login'); return; }
-        document.querySelectorAll('#admin-name').forEach(e => e.textContent = user);
-        document.querySelectorAll('#admin-initials').forEach(e => e.textContent = user.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase());
-    }
-    const hash = '#' + name;
-    if (location.hash !== hash) history.replaceState(null, '', hash);
+window.actualizarPagoAtletasSelector=actualizarPagoAtletasSelector; window.onAtletaPagoSelected=onAtletaPagoSelected; window.guardarPago=guardarPago; window.limpiarformularioPago=limpiarformularioPago; window.toggleSubRow=toggleSubRow; window.mostrarPagos=mostrarPagos; window.editarPago=editarPago; window.eliminarPago=eliminarPago;
+actualizarPagoAtletasSelector(); mostrarPagos();
 }
-window.addEventListener('hashchange', () => {
-    const name = location.hash.replace('#','') || (localStorage.getItem('apex_admin') ? 'deportes' : 'login');
-    showPage(['login','deportes','entrenadores','asignaciones','atletas','pagos'].includes(name) ? name : 'login');
-});
-document.addEventListener('click', e => {
-    const a=e.target.closest('a[href^="#"]');
-    if(!a) return;
-    const name=a.getAttribute('href').slice(1);
-    if(['deportes','entrenadores','asignaciones','atletas','pagos'].includes(name)) {
-        e.preventDefault(); showPage(name);
-    }
-});
 
-
-showPage(location.hash.replace("#", "") || (localStorage.getItem("apex_admin") ? "deportes" : "login"));
-
+function showPage(name){
+ const valid=['login','deportes','entrenadores','asignaciones','atletas','pagos'];
+ if(!valid.includes(name)) name=localStorage.getItem('apex_admin')?'deportes':'login';
+ if(name!=='login' && !localStorage.getItem('apex_admin')) name='login';
+ loadTemplate(name);
+ if(name==='login') initLogin();
+ if(name==='deportes') initDeportes();
+ if(name==='entrenadores') initEntrenadores();
+ if(name==='asignaciones') initAsignaciones();
+ if(name==='atletas') initAtletas();
+ if(name==='pagos') initPagos();
+}
+window.addEventListener('hashchange',()=>showPage(location.hash.replace('#','')|| (localStorage.getItem('apex_admin')?'deportes':'login')));
+document.addEventListener('click',(e)=>{ const a=e.target.closest('a[href^="#"]'); if(a){ e.preventDefault(); location.hash=a.getAttribute('href'); }});
+showPage(location.hash.replace('#','')|| (localStorage.getItem('apex_admin')?'deportes':'login'));
 </script>
 </body>
 </html>
